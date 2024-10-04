@@ -116,19 +116,34 @@
     #define RAD2DEG (180.0f/PI)
 #endif
 
-// Allow custom memory allocators
-// NOTE: Require recompiling raylib sources
-#ifndef RL_MALLOC
-    #define RL_MALLOC(sz)       malloc(sz)
-#endif
-#ifndef RL_CALLOC
-    #define RL_CALLOC(n,sz)     calloc(n,sz)
-#endif
-#ifndef RL_REALLOC
-    #define RL_REALLOC(ptr,sz)  realloc(ptr,sz)
-#endif
-#ifndef RL_FREE
-    #define RL_FREE(ptr)        free(ptr)
+#ifndef RL_DISABLE_LEAK_CHECK
+    #include "rextension.h"
+
+    #ifndef RL_MALLOC
+        #define RL_MALLOC(sz)       rlMalloc(sz, RL_FILENAME, __LINE__)
+    #endif
+    #ifndef RL_CALLOC
+        #define RL_CALLOC(n,sz)     rlCalloc(n, sz, RL_FILENAME, __LINE__)
+    #endif
+    #ifndef RL_REALLOC
+        #define RL_REALLOC(ptr,sz)  rlRealloc(ptr, sz, RL_FILENAME, __LINE__)
+    #endif
+    #ifndef RL_FREE
+        #define RL_FREE(ptr)        rlFree(ptr)
+    #endif
+#else
+    #ifndef RL_MALLOC
+        #define RL_MALLOC(sz)       malloc(sz)
+    #endif
+    #ifndef RL_CALLOC
+        #define RL_CALLOC(n,sz)     calloc(n,sz)
+    #endif
+    #ifndef RL_REALLOC
+        #define RL_REALLOC(ptr,sz)  realloc(ptr,sz)
+    #endif
+    #ifndef RL_FREE
+        #define RL_FREE(ptr)        free(ptr)
+    #endif
 #endif
 
 // NOTE: MSVC C++ compiler does not support compound literals (C99 feature)

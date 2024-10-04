@@ -69,6 +69,7 @@ if (${CUSTOMIZE_BUILD})
     define_if("raylib" SUPPORT_FILEFORMAT_FLAC)
     define_if("raylib" SUPPORT_STANDARD_FILEIO)
     define_if("raylib" SUPPORT_TRACELOG)
+    define_if("raylib" RL_DISABLE_LEAK_CHECK)
 
     if (UNIX AND NOT APPLE)
         target_compile_definitions("raylib" PUBLIC "MAX_FILEPATH_LENGTH=4096")

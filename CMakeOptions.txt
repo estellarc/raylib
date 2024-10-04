@@ -101,3 +101,6 @@ cmake_dependent_option(SUPPORT_FILEFORMAT_FLAC "Support loading FLAC for sound" 
 # utils.c
 cmake_dependent_option(SUPPORT_STANDARD_FILEIO "Support standard file io library (stdio.h)" ON CUSTOMIZE_BUILD ON)
 cmake_dependent_option(SUPPORT_TRACELOG "Show TraceLog() output messages. NOTE: By default LOG_DEBUG traces not shown" ON CUSTOMIZE_BUILD ON)
+
+# rextension.c
+cmake_dependent_option(RL_DISABLE_LEAK_CHECK "Support stb_leakcheck" ON CUSTOMIZE_BUILD ON)
