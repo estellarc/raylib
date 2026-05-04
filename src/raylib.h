@@ -163,9 +163,6 @@
 // this defines are useful for internal check and avoid type (re)definitions
 #define RL_COLOR_TYPE
 #define RL_RECTANGLE_TYPE
-#define RL_VECTOR2_TYPE
-#define RL_VECTOR3_TYPE
-#define RL_VECTOR4_TYPE
 #define RL_QUATERNION_TYPE
 #define RL_MATRIX_TYPE
 
@@ -212,11 +209,19 @@
 #endif
 #endif
 
+#ifndef RL_VECTOR2_TYPE
+#define RL_VECTOR2_TYPE
+
 // Vector2, 2 components
 typedef struct Vector2 {
     float x;                // Vector x component
     float y;                // Vector y component
 } Vector2;
+
+#endif // RL_VECTOR2_TYPE
+
+#ifndef RL_VECTOR3_TYPE
+#define RL_VECTOR3_TYPE
 
 // Vector3, 3 components
 typedef struct Vector3 {
@@ -225,6 +230,11 @@ typedef struct Vector3 {
     float z;                // Vector z component
 } Vector3;
 
+#endif // RL_VECTOR3_TYPE
+
+#ifndef RL_VECTOR4_TYPE
+#define RL_VECTOR4_TYPE
+
 // Vector4, 4 components
 typedef struct Vector4 {
     float x;                // Vector x component
@@ -232,6 +242,8 @@ typedef struct Vector4 {
     float z;                // Vector z component
     float w;                // Vector w component
 } Vector4;
+
+#endif // RL_VECTOR4_TYPE
 
 // Quaternion, 4 components (Vector4 alias)
 typedef Vector4 Quaternion;
