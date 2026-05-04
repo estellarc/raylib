@@ -103,24 +103,6 @@ return {
       description = ""
     },
     {
-      name = "RL_VECTOR2_TYPE",
-      type = "GUARD",
-      value = "",
-      description = ""
-    },
-    {
-      name = "RL_VECTOR3_TYPE",
-      type = "GUARD",
-      value = "",
-      description = ""
-    },
-    {
-      name = "RL_VECTOR4_TYPE",
-      type = "GUARD",
-      value = "",
-      description = ""
-    },
-    {
       name = "RL_QUATERNION_TYPE",
       type = "GUARD",
       value = "",
@@ -290,6 +272,24 @@ return {
     },
     {
       name = "RL_BOOL_TYPE",
+      type = "GUARD",
+      value = "",
+      description = ""
+    },
+    {
+      name = "RL_VECTOR2_TYPE",
+      type = "GUARD",
+      value = "",
+      description = ""
+    },
+    {
+      name = "RL_VECTOR3_TYPE",
+      type = "GUARD",
+      value = "",
+      description = ""
+    },
+    {
+      name = "RL_VECTOR4_TYPE",
       type = "GUARD",
       value = "",
       description = ""
