@@ -26,6 +26,7 @@
 *       #define GRAPHICS_API_OPENGL_21
 *       #define GRAPHICS_API_OPENGL_33
 *       #define GRAPHICS_API_OPENGL_43
+        #define GRAPHICS_API_OPENGL_46
 *       #define GRAPHICS_API_OPENGL_ES2
 *       #define GRAPHICS_API_OPENGL_ES3
 *           Use selected OpenGL graphics backend, should be supported by platform
@@ -150,6 +151,7 @@
     !defined(GRAPHICS_API_OPENGL_21) && \
     !defined(GRAPHICS_API_OPENGL_33) && \
     !defined(GRAPHICS_API_OPENGL_43) && \
+    !defined(GRAPHICS_API_OPENGL_46) && \
     !defined(GRAPHICS_API_OPENGL_ES2) && \
     !defined(GRAPHICS_API_OPENGL_ES3)
         #define GRAPHICS_API_OPENGL_33
@@ -169,6 +171,9 @@
     #if defined(GRAPHICS_API_OPENGL_ES2)
         #undef GRAPHICS_API_OPENGL_ES2
     #endif
+    #if defined(GRAPHICS_API_OPENGL_46)
+        #undef GRAPHICS_API_OPENGL_46
+    #endif
 #endif
 
 // Software implementation uses OpenGL 1.1 functionality
@@ -185,6 +190,12 @@
 // OpenGL 4.3 uses OpenGL 3.3 Core functionality
 #if defined(GRAPHICS_API_OPENGL_43)
     #define GRAPHICS_API_OPENGL_33
+#endif
+
+// OpenGL 4.6 uses OpenGL 3.3 Core functionality
+#if defined(GRAPHICS_API_OPENGL_46)
+    #define GRAPHICS_API_OPENGL_33
+    #define GRAPHICS_API_OPENGL_43
 #endif
 
 // OpenGL ES 3.0 uses OpenGL ES 2.0 functionality (and more)
@@ -430,6 +441,7 @@ typedef enum {
     RL_OPENGL_21,               // OpenGL 2.1 (GLSL 120)
     RL_OPENGL_33,               // OpenGL 3.3 (GLSL 330)
     RL_OPENGL_43,               // OpenGL 4.3 (using GLSL 330)
+    RL_OPENGL_46,               // OpenGL 4.6 (using GLSL 330)
     RL_OPENGL_ES_20,            // OpenGL ES 2.0 (GLSL 100)
     RL_OPENGL_ES_30             // OpenGL ES 3.0 (GLSL 300 es)
 } rlGlVersion;
@@ -2717,6 +2729,8 @@ int rlGetVersion(void)
 #endif
 #if defined(GRAPHICS_API_OPENGL_21)
     glVersion = RL_OPENGL_21;
+#elif defined(GRAPHICS_API_OPENGL_46)
+    glVersion = RL_OPENGL_46;
 #elif defined(GRAPHICS_API_OPENGL_43)
     glVersion = RL_OPENGL_43;
 #elif defined(GRAPHICS_API_OPENGL_33)

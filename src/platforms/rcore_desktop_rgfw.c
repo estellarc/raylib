@@ -1714,6 +1714,11 @@ int InitPlatform(void)
         hints->major = 4;
         hints->minor = 3;
     }
+    else if (rlGetVersion() == RL_OPENGL_46)
+    {
+        hints->major = 4;
+        hints->minor = 6;
+    }
     else if (rlGetVersion() == RL_OPENGL_SOFTWARE)
     {
         hints->major = 1;

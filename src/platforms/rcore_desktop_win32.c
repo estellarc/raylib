@@ -1443,6 +1443,11 @@ HGLRC InitOpenGL(HWND hwnd, HDC hdc)
             glContextVersionMajor = 4;
             glContextVersionMinor = 3;
         }
+        else if (rlGetVersion() == RL_OPENGL_46)    // Request OpenGL 4.6 context
+        {
+            glContextVersionMajor = 4;
+            glContextVersionMinor = 6;
+        }
         else if (rlGetVersion() == RL_OPENGL_ES_20) // Request OpenGL ES 2.0 context
         {
             if (IsWglExtensionAvailable(platform.hdc, "WGL_EXT_create_context_es_profile") ||

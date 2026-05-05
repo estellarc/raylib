@@ -549,6 +549,7 @@ pub const OpenglVersion = enum {
     gl_2_1,
     gl_3_3,
     gl_4_3,
+    gl_4_6,
     gles_2,
     gles_3,
 
@@ -560,6 +561,7 @@ pub const OpenglVersion = enum {
             .gl_2_1 => return "GRAPHICS_API_OPENGL_21",
             .gl_3_3 => return "GRAPHICS_API_OPENGL_33",
             .gl_4_3 => return "GRAPHICS_API_OPENGL_43",
+            .gl_4_6 => return "GRAPHICS_API_OPENGL_46",
             .gles_2 => return "GRAPHICS_API_OPENGL_ES2",
             .gles_3 => return "GRAPHICS_API_OPENGL_ES3",
         }
