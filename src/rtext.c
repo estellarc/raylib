@@ -947,8 +947,8 @@ Image GenImageFontAtlas(const GlyphInfo *glyphs, Rectangle **glyphRecs, int glyp
                         // Security fix: check both lower and upper bounds
                         if (destX >= 0 && destX < atlas.width && destY >= 0 && destY < atlas.height)
                         {
-                            ((unsigned char *)atlas.data)[destY * atlas.width + destX] =
-                                ((unsigned char *)glyphs[i].image.data)[y * glyphs[i].image.width + x];
+                            ((unsigned char *)atlas.data)[destY*atlas.width + destX] =
+                                ((unsigned char *)glyphs[i].image.data)[y*glyphs[i].image.width + x];
                         }
                     }
                 }
@@ -1919,9 +1919,13 @@ char *TextReplaceBetween(const char *text, const char *begin, const char *end, c
                 int replaceLen = (replacement == NULL)? 0 : TextLength(replacement);
                 //int toreplaceLen = endIndex - beginIndex - beginLen;
 
-                strncpy(buffer, text, beginIndex + beginLen); // Copy first text part
-                if (replacement != NULL) strncpy(buffer + beginIndex + beginLen, replacement, replaceLen); // Copy replacement (if provided)
-                strncpy(buffer + beginIndex + beginLen + replaceLen, text + endIndex, textLen - endIndex); // Copy end text part
+                if ((beginIndex + beginLen + replaceLen + (textLen - endIndex)) < (MAX_TEXT_BUFFER_LENGTH - 1))
+                {
+                    strncpy(buffer, text, beginIndex + beginLen); // Copy first text part
+                    if (replacement != NULL) strncpy(buffer + beginIndex + beginLen, replacement, replaceLen); // Copy replacement (if provided)
+                    strncpy(buffer + beginIndex + beginLen + replaceLen, text + endIndex, textLen - endIndex); // Copy end text part
+                }
+                else TRACELOG(LOG_WARNING, "TEXT: Text with replaced string is longer than internal buffer (MAX_TEXT_BUFFER_LENGTH)");
             }
         }
     }
@@ -2196,18 +2200,43 @@ char *TextToSnake(const char *text)
     if (text != NULL)
     {
         // Check for next separator to upper case another character
-        for (int i = 0, j = 0; (i < MAX_TEXT_BUFFER_LENGTH - 1) && (text[j] != '\0'); i++, j++)
+        for (int i = 0, j = 0; (i < MAX_TEXT_BUFFER_LENGTH - 1) && (text[j] != '\0'); j++)
         {
-            if ((text[j] >= 'A') && (text[j] <= 'Z'))
+            if (text[j] == ' ')
             {
-                if (i >= 1)
+                if ((i > 0) && (buffer[i - 1] != '_'))
                 {
                     buffer[i] = '_';
                     i++;
                 }
-                buffer[i] = text[j] + 32;
             }
-            else buffer[i] = text[j];
+            else if ((text[j] >= 'A') && (text[j] <= 'Z'))
+            {
+                if ((i > 0) && (buffer[i - 1] != '_'))
+                {
+                    char prev = text[j - 1];
+                    char next = text[j + 1];
+
+                    // Considering multiple cap leters to be on single word (HTTPRequest --> http_request)
+                    if (((prev >= 'a') && (prev <= 'z')) ||
+                        (((prev >= 'A') && (prev <= 'Z')) && ((next >= 'a') && (next <= 'z'))))
+                    {
+                        if (i < MAX_TEXT_BUFFER_LENGTH - 2)
+                        {
+                            buffer[i] = '_';
+                            i++;
+                        }
+                    }
+                }
+
+                buffer[i] = text[j] + 32;
+                i++;
+            }
+            else
+            {
+                buffer[i] = text[j];
+                i++;
+            }
         }
     }
 
