@@ -962,35 +962,35 @@
     ((name "TraceLogLevel")
      (description "Trace log level")
      (values
-       ((name "LOG_ALL")
+       ((name "LOG_LEVEL_ALL")
         (value 0)
         (description "Display all logs"))
 
-       ((name "LOG_TRACE")
+       ((name "LOG_LEVEL_TRACE")
         (value 1)
         (description "Trace logging, intended for internal use only"))
 
-       ((name "LOG_DEBUG")
+       ((name "LOG_LEVEL_DEBUG")
         (value 2)
         (description "Debug logging, used for internal debugging, it should be disabled on release builds"))
 
-       ((name "LOG_INFO")
+       ((name "LOG_LEVEL_INFO")
         (value 3)
         (description "Info logging, used for program execution info"))
 
-       ((name "LOG_WARNING")
+       ((name "LOG_LEVEL_WARNING")
         (value 4)
         (description "Warning logging, used on recoverable failures"))
 
-       ((name "LOG_ERROR")
+       ((name "LOG_LEVEL_ERROR")
         (value 5)
         (description "Error logging, used on unrecoverable failures"))
 
-       ((name "LOG_FATAL")
+       ((name "LOG_LEVEL_FATAL")
         (value 6)
         (description "Fatal logging, used to abort program: exit(EXIT_FAILURE)"))
 
-       ((name "LOG_NONE")
+       ((name "LOG_LEVEL_NONE")
         (value 7)
         (description "Disable logging"))))
 
@@ -2805,7 +2805,7 @@
        ((type "int") (name "logLevel"))))
 
     ((name "TraceLog")
-     (description "Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)")
+     (description "Show trace log messages (LOG_LEVEL_DEBUG, LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR...)")
      (return-type "void")
      (params
        ((type "int") (name "logLevel"))

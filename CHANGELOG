@@ -2004,7 +2004,7 @@ Detailed changes:
 [audio] RENAMED: IsMusicPlaying() to IsMusicStreamPlaying()
 [audio] REVIEWED: ExportWaveAsCode()
 [audio] REDESIGNED: Use frameCount on audio instead of sampleCount
-[utils] REVIEWED: exit() on LOG_FATAL instead of LOG_ERROR (#1796)
+[utils] REVIEWED: exit() on LOG_LEVEL_FATAL instead of LOG_LEVEL_ERROR (#1796)
 [examples] ADDED: core_custom_frame_control
 [examples] ADDED: core_basic_screen_manager
 [examples] ADDED: core_split_screen (#1806) by @JeffM2501

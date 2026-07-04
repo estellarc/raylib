@@ -55,8 +55,8 @@
 #include <string.h>     // Required for: strcmp(), strcpy()
 #include <stdlib.h>     // Required for: NULL, calloc(), free()
 
-#define SUPPORT_LOG_INFO
-#if defined(SUPPORT_LOG_INFO) //&& defined(_DEBUG)
+#define SUPPORT_LOG_LEVEL_INFO
+#if defined(SUPPORT_LOG_LEVEL_INFO) //&& defined(_DEBUG)
     #define LOG(...) printf("REXM: "__VA_ARGS__)
 #else
     #define LOG(...)
@@ -216,7 +216,7 @@ static int GetTextListIndex(const char *text, const char **list, int listCount);
 //------------------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-    SetTraceLogLevel(LOG_NONE);
+    SetTraceLogLevel(LOG_LEVEL_NONE);
 
     // Path values can be configured with environment variables
     exBasePath = getenv("REXM_EXAMPLES_BASE_PATH");
@@ -1548,10 +1548,10 @@ int main(int argc, char *argv[])
                     "void CustomTraceLog(int msgType, const char *text, va_list args)\n{\n"
                     "    if (logTextOffset < 3800)\n    {\n"
                     "    switch (msgType)\n    {\n"
-                    "        case LOG_INFO: logTextOffset += sprintf(logText + logTextOffset, \"INFO: \"); break;\n"
-                    "        case LOG_ERROR: logTextOffset += sprintf(logText + logTextOffset, \"ERROR: \"); break;\n"
-                    "        case LOG_WARNING: logTextOffset += sprintf(logText + logTextOffset, \"WARNING: \"); break;\n"
-                    "        case LOG_DEBUG: logTextOffset += sprintf(logText + logTextOffset, \"DEBUG: \"); break;\n"
+                    "        case LOG_LEVEL_INFO: logTextOffset += sprintf(logText + logTextOffset, \"INFO: \"); break;\n"
+                    "        case LOG_LEVEL_ERROR: logTextOffset += sprintf(logText + logTextOffset, \"ERROR: \"); break;\n"
+                    "        case LOG_LEVEL_WARNING: logTextOffset += sprintf(logText + logTextOffset, \"WARNING: \"); break;\n"
+                    "        case LOG_LEVEL_DEBUG: logTextOffset += sprintf(logText + logTextOffset, \"DEBUG: \"); break;\n"
                     "        default: break;\n    }\n"
                     "    logTextOffset += vsprintf(logText + logTextOffset, text, args);\n"
                     "    logTextOffset += sprintf(logText + logTextOffset, \"\\n\");\n}\n}\n\n"

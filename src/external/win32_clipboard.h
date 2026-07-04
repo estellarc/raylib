@@ -249,30 +249,30 @@ unsigned char *Win32GetClipboardImageData(int *width, int *height, unsigned int 
                     GlobalUnlock(clipHandle);
                     CloseClipboard();
 
-                    TRACELOG(LOG_INFO, "Clipboad image acquired successfully");
+                    TRACELOG(LOG_LEVEL_INFO, "Clipboad image acquired successfully");
                     //------------------------------------------------------------------------
                 }
                 else
                 {
-                    TRACELOG(LOG_WARNING, "Clipboard data is not supported (>2GB?)");
+                    TRACELOG(LOG_LEVEL_WARNING, "Clipboard data is not supported (>2GB?)");
                     GlobalUnlock(clipHandle);
                     CloseClipboard();
                 }
             }
             else
             {
-                TRACELOG(LOG_WARNING, "Clipboard data failed to be locked");
+                TRACELOG(LOG_LEVEL_WARNING, "Clipboard data failed to be locked");
                 GlobalUnlock(clipHandle);
                 CloseClipboard();
             }
         }
         else
         {
-            TRACELOG(LOG_WARNING, "Clipboard data is not an image");
+            TRACELOG(LOG_LEVEL_WARNING, "Clipboard data is not an image");
             CloseClipboard();
         }
     }
-    else TRACELOG(LOG_WARNING, "Clipboard can not be opened");
+    else TRACELOG(LOG_LEVEL_WARNING, "Clipboard can not be opened");
 
     return bmpData;
 }

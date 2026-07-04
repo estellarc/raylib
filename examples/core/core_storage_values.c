@@ -133,7 +133,7 @@ bool SaveStorageValue(unsigned int position, int value)
             else
             {
                 // RL_REALLOC failed
-                TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to realloc data (%u), position in bytes (%u) bigger than actual file size", STORAGE_DATA_FILE, dataSize, position*sizeof(int));
+                TraceLog(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to realloc data (%u), position in bytes (%u) bigger than actual file size", STORAGE_DATA_FILE, dataSize, position*sizeof(int));
 
                 // We store the old size of the file
                 newFileData = fileData;
@@ -154,11 +154,11 @@ bool SaveStorageValue(unsigned int position, int value)
         success = SaveFileData(STORAGE_DATA_FILE, newFileData, newDataSize);
         RL_FREE(newFileData);
 
-        TraceLog(LOG_INFO, "FILEIO: [%s] Saved storage value: %i", STORAGE_DATA_FILE, value);
+        TraceLog(LOG_LEVEL_INFO, "FILEIO: [%s] Saved storage value: %i", STORAGE_DATA_FILE, value);
     }
     else
     {
-        TraceLog(LOG_INFO, "FILEIO: [%s] File created successfully", STORAGE_DATA_FILE);
+        TraceLog(LOG_LEVEL_INFO, "FILEIO: [%s] File created successfully", STORAGE_DATA_FILE);
 
         dataSize = (position + 1)*sizeof(int);
         fileData = (unsigned char *)RL_MALLOC(dataSize);
@@ -168,7 +168,7 @@ bool SaveStorageValue(unsigned int position, int value)
         success = SaveFileData(STORAGE_DATA_FILE, fileData, dataSize);
         UnloadFileData(fileData);
 
-        TraceLog(LOG_INFO, "FILEIO: [%s] Saved storage value: %i", STORAGE_DATA_FILE, value);
+        TraceLog(LOG_LEVEL_INFO, "FILEIO: [%s] Saved storage value: %i", STORAGE_DATA_FILE, value);
     }
 
     return success;
@@ -184,7 +184,7 @@ int LoadStorageValue(unsigned int position)
 
     if (fileData != NULL)
     {
-        if (dataSize < ((int)(position*4))) TraceLog(LOG_WARNING, "FILEIO: [%s] Failed to find storage position: %i", STORAGE_DATA_FILE, position);
+        if (dataSize < ((int)(position*4))) TraceLog(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to find storage position: %i", STORAGE_DATA_FILE, position);
         else
         {
             int *dataPtr = (int *)fileData;
@@ -193,7 +193,7 @@ int LoadStorageValue(unsigned int position)
 
         UnloadFileData(fileData);
 
-        TraceLog(LOG_INFO, "FILEIO: [%s] Loaded storage value: %i", STORAGE_DATA_FILE, value);
+        TraceLog(LOG_LEVEL_INFO, "FILEIO: [%s] Loaded storage value: %i", STORAGE_DATA_FILE, value);
     }
 
     return value;

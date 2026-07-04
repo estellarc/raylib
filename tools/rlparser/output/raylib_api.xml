@@ -325,14 +325,14 @@
             <Value name="FLAG_INTERLACED_HINT" integer="65536" desc="Set to try enabling interlaced video format (for V3D)" />
         </Enum>
         <Enum name="TraceLogLevel" valueCount="8" desc="Trace log level">
-            <Value name="LOG_ALL" integer="0" desc="Display all logs" />
-            <Value name="LOG_TRACE" integer="1" desc="Trace logging, intended for internal use only" />
-            <Value name="LOG_DEBUG" integer="2" desc="Debug logging, used for internal debugging, it should be disabled on release builds" />
-            <Value name="LOG_INFO" integer="3" desc="Info logging, used for program execution info" />
-            <Value name="LOG_WARNING" integer="4" desc="Warning logging, used on recoverable failures" />
-            <Value name="LOG_ERROR" integer="5" desc="Error logging, used on unrecoverable failures" />
-            <Value name="LOG_FATAL" integer="6" desc="Fatal logging, used to abort program: exit(EXIT_FAILURE)" />
-            <Value name="LOG_NONE" integer="7" desc="Disable logging" />
+            <Value name="LOG_LEVEL_ALL" integer="0" desc="Display all logs" />
+            <Value name="LOG_LEVEL_TRACE" integer="1" desc="Trace logging, intended for internal use only" />
+            <Value name="LOG_LEVEL_DEBUG" integer="2" desc="Debug logging, used for internal debugging, it should be disabled on release builds" />
+            <Value name="LOG_LEVEL_INFO" integer="3" desc="Info logging, used for program execution info" />
+            <Value name="LOG_LEVEL_WARNING" integer="4" desc="Warning logging, used on recoverable failures" />
+            <Value name="LOG_LEVEL_ERROR" integer="5" desc="Error logging, used on unrecoverable failures" />
+            <Value name="LOG_LEVEL_FATAL" integer="6" desc="Fatal logging, used to abort program: exit(EXIT_FAILURE)" />
+            <Value name="LOG_LEVEL_NONE" integer="7" desc="Disable logging" />
         </Enum>
         <Enum name="KeyboardKey" valueCount="110" desc="Keyboard keys (US keyboard layout)">
             <Value name="KEY_NULL" integer="0" desc="Key: NULL, used for no key pressed" />
@@ -993,7 +993,7 @@
         <Function name="SetTraceLogLevel" retType="void" paramCount="1" desc="Set the current threshold (minimum) log level">
             <Param type="int" name="logLevel" desc="" />
         </Function>
-        <Function name="TraceLog" retType="void" paramCount="3" desc="Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)">
+        <Function name="TraceLog" retType="void" paramCount="3" desc="Show trace log messages (LOG_LEVEL_DEBUG, LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR...)">
             <Param type="int" name="logLevel" desc="" />
             <Param type="const char *" name="text" desc="" />
             <Param type="..." name="args" desc="" />

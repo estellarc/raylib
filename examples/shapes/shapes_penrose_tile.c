@@ -146,14 +146,14 @@ int main(void)
 static void PushTurtleState(TurtleState state)
 {
     if (turtleTop < (TURTLE_STACK_MAX_SIZE - 1)) turtleStack[++turtleTop] = state;
-    else TraceLog(LOG_WARNING, "TURTLE STACK OVERFLOW!");
+    else TraceLog(LOG_LEVEL_WARNING, "TURTLE STACK OVERFLOW!");
 }
 
 // Pop turtle state step
 static TurtleState PopTurtleState(void)
 {
     if (turtleTop >= 0) return turtleStack[turtleTop--];
-    else TraceLog(LOG_WARNING, "TURTLE STACK UNDERFLOW!");
+    else TraceLog(LOG_LEVEL_WARNING, "TURTLE STACK UNDERFLOW!");
 
     return (TurtleState){ 0 };
 }

@@ -92,8 +92,8 @@
 
 // Simple log system to avoid log calls if required
 // NOTE: Avoiding those calls, also avoids const strings memory usage
-#define RPRAND_SHOW_LOG_INFO
-#if defined(RPNG_SHOW_LOG_INFO)
+#define RPRAND_SHOW_LOG_LEVEL_INFO
+#if defined(RPNG_SHOW_LOG_LEVEL_INFO)
   #define RPRAND_LOG(...) printf(__VA_ARGS__)
 #else
   #define RPRAND_LOG(...)

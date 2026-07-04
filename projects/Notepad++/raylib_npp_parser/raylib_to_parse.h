@@ -135,7 +135,7 @@ RLAPI void OpenURL(const char *url);                            // Open URL with
 
 // Logging system
 RLAPI void SetTraceLogLevel(int logLevel);                      // Set the current threshold (minimum) log level
-RLAPI void TraceLog(int logLevel, const char *text, ...);       // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+RLAPI void TraceLog(int logLevel, const char *text, ...);       // Show trace log messages (LOG_LEVEL_DEBUG, LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR...)
 RLAPI void SetTraceLogCallback(TraceLogCallback callback);      // Set custom trace log
 
 // Memory management, using internal allocators

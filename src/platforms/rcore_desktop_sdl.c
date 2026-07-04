@@ -325,7 +325,7 @@ Uint8 SDL_EventState(Uint32 type, int state)
     {
         case SDL_DISABLE: SDL_SetEventEnabled(type, false); break;
         case SDL_ENABLE: SDL_SetEventEnabled(type, true); break;
-        default: TRACELOG(LOG_WARNING, "SDL: Event state of unknow type");
+        default: TRACELOG(LOG_LEVEL_WARNING, "SDL: Event state of unknow type");
     }
 
     return stateBefore;
@@ -335,7 +335,7 @@ void SDL_GetCurrentDisplayMode_Adapter(SDL_DisplayID displayID, SDL_DisplayMode 
 {
     const SDL_DisplayMode *currentMode = SDL_GetCurrentDisplayMode(displayID);
 
-    if (currentMode == NULL) TRACELOG(LOG_WARNING, "SDL: No possible to get current display mode");
+    if (currentMode == NULL) TRACELOG(LOG_LEVEL_WARNING, "SDL: No possible to get current display mode");
     else *mode = *currentMode;
 }
 
@@ -426,7 +426,7 @@ int SDL_GetNumTouchFingers(SDL_TouchID touchID)
 // SDL_GetClipboardData function is available since SDL 3.1.3. (e.g. SDL3)
 void *SDL_GetClipboardData(const char *mime_type, size_t *size)
 {
-    TRACELOG(LOG_WARNING, "SDL: Getting clipboard data that is not text not available in SDL2");
+    TRACELOG(LOG_LEVEL_WARNING, "SDL: Getting clipboard data that is not text not available in SDL2");
 
     // TODO: Implement getting clipboard data
 
@@ -483,7 +483,7 @@ void ToggleFullscreen(void)
             FLAG_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
         }
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 }
 
 // Toggle borderless windowed mode
@@ -509,7 +509,7 @@ void ToggleBorderlessWindowed(void)
             FLAG_SET(CORE.Window.flags, FLAG_BORDERLESS_WINDOWED_MODE);
         }
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 }
 
 // Set window state: maximized, if resizable
@@ -536,7 +536,7 @@ void RestoreWindow(void)
 // Set window configuration state using flags
 void SetWindowState(unsigned int flags)
 {
-    if (!CORE.Window.ready) TRACELOG(LOG_WARNING, "WINDOW: SetWindowState does nothing before window initialization, Use \"SetConfigFlags\" instead");
+    if (!CORE.Window.ready) TRACELOG(LOG_LEVEL_WARNING, "WINDOW: SetWindowState does nothing before window initialization, Use \"SetConfigFlags\" instead");
 
     FLAG_SET(CORE.Window.flags, flags);
 
@@ -558,7 +558,7 @@ void SetWindowState(unsigned int flags)
             SDL_SetWindowFullscreen(platform.window, SDL_WINDOW_FULLSCREEN);
             FLAG_SET(CORE.Window.flags, FLAG_FULLSCREEN_MODE);
         }
-        else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+        else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_RESIZABLE))
     {
@@ -582,7 +582,7 @@ void SetWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_UNFOCUSED))
     {
-        TRACELOG(LOG_WARNING, "SetWindowState() - FLAG_WINDOW_UNFOCUSED is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "SetWindowState() - FLAG_WINDOW_UNFOCUSED is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_TOPMOST))
     {
@@ -594,17 +594,17 @@ void SetWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_TRANSPARENT))
     {
-        TRACELOG(LOG_WARNING, "SetWindowState() - FLAG_WINDOW_TRANSPARENT is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "SetWindowState() - FLAG_WINDOW_TRANSPARENT is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_HIGHDPI))
     {
         // NOTE: Such a function does not seem to exist
-        TRACELOG(LOG_WARNING, "SetWindowState() - FLAG_WINDOW_HIGHDPI is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "SetWindowState() - FLAG_WINDOW_HIGHDPI is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_MOUSE_PASSTHROUGH))
     {
         //SDL_SetWindowGrab(platform.window, SDL_FALSE);
-        TRACELOG(LOG_WARNING, "SetWindowState() - FLAG_WINDOW_MOUSE_PASSTHROUGH is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "SetWindowState() - FLAG_WINDOW_MOUSE_PASSTHROUGH is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_BORDERLESS_WINDOWED_MODE))
     {
@@ -619,7 +619,7 @@ void SetWindowState(unsigned int flags)
         {
             SDL_SetWindowFullscreen(platform.window, SDL_WINDOW_FULLSCREEN_DESKTOP);
         }
-        else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+        else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
     }
     if (FLAG_IS_SET(flags, FLAG_MSAA_4X_HINT))
     {
@@ -628,7 +628,7 @@ void SetWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_INTERLACED_HINT))
     {
-        TRACELOG(LOG_WARNING, "SetWindowState() - FLAG_INTERLACED_HINT is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "SetWindowState() - FLAG_INTERLACED_HINT is not supported on PLATFORM_DESKTOP_SDL");
     }
 }
 
@@ -668,7 +668,7 @@ void ClearWindowState(unsigned int flags)
     if (FLAG_IS_SET(flags, FLAG_WINDOW_UNFOCUSED))
     {
         //SDL_RaiseWindow(platform.window);
-        TRACELOG(LOG_WARNING, "ClearWindowState() - FLAG_WINDOW_UNFOCUSED is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "ClearWindowState() - FLAG_WINDOW_UNFOCUSED is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_TOPMOST))
     {
@@ -676,17 +676,17 @@ void ClearWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_TRANSPARENT))
     {
-        TRACELOG(LOG_WARNING, "ClearWindowState() - FLAG_WINDOW_TRANSPARENT is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "ClearWindowState() - FLAG_WINDOW_TRANSPARENT is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_HIGHDPI))
     {
         // NOTE: There also doesn't seem to be a feature to disable high DPI once enabled
-        TRACELOG(LOG_WARNING, "ClearWindowState() - FLAG_WINDOW_HIGHDPI is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "ClearWindowState() - FLAG_WINDOW_HIGHDPI is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_MOUSE_PASSTHROUGH))
     {
         //SDL_SetWindowGrab(platform.window, SDL_TRUE);
-        TRACELOG(LOG_WARNING, "ClearWindowState() - FLAG_WINDOW_MOUSE_PASSTHROUGH is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "ClearWindowState() - FLAG_WINDOW_MOUSE_PASSTHROUGH is not supported on PLATFORM_DESKTOP_SDL");
     }
     if (FLAG_IS_SET(flags, FLAG_BORDERLESS_WINDOWED_MODE))
     {
@@ -699,7 +699,7 @@ void ClearWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_INTERLACED_HINT))
     {
-        TRACELOG(LOG_WARNING, "ClearWindowState() - FLAG_INTERLACED_HINT is not supported on PLATFORM_DESKTOP_SDL");
+        TRACELOG(LOG_LEVEL_WARNING, "ClearWindowState() - FLAG_INTERLACED_HINT is not supported on PLATFORM_DESKTOP_SDL");
     }
 }
 
@@ -808,7 +808,7 @@ void SetWindowIcon(Image image)
 // Set icon for window
 void SetWindowIcons(Image *images, int count)
 {
-    TRACELOG(LOG_WARNING, "SetWindowIcons() not available on target platform");
+    TRACELOG(LOG_LEVEL_WARNING, "SetWindowIcons() not available on target platform");
 }
 
 // Set title for window
@@ -880,9 +880,9 @@ void SetWindowMonitor(int monitor)
 
             if (wasFullscreen == 1) ToggleFullscreen(); // Re-enter fullscreen
         }
-        else TRACELOG(LOG_WARNING, "SDL: Failed to get selected display usable bounds");
+        else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to get selected display usable bounds");
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 }
 
 // Set window minimum dimensions (FLAG_WINDOW_RESIZABLE)
@@ -1025,9 +1025,9 @@ Vector2 GetMonitorPosition(int monitor)
         {
             return (Vector2){ (float)displayBounds.x, (float)displayBounds.y };
         }
-        else TRACELOG(LOG_WARNING, "SDL: Failed to get selected display usable bounds");
+        else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to get selected display usable bounds");
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
     return (Vector2){ 0.0f, 0.0f };
 }
 
@@ -1047,7 +1047,7 @@ int GetMonitorWidth(int monitor)
         SDL_GetCurrentDisplayMode(monitor, &mode);
         width = mode.w;
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 
     return width;
 }
@@ -1068,7 +1068,7 @@ int GetMonitorHeight(int monitor)
         SDL_GetCurrentDisplayMode(monitor, &mode);
         height = mode.h;
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 
     return height;
 }
@@ -1092,7 +1092,7 @@ int GetMonitorPhysicalWidth(int monitor)
         // Calculate size on inches, then convert to millimeter
         if (ddpi > 0.0f) width = (int)((mode.w/ddpi)*25.4f);
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 
     return width;
 }
@@ -1116,7 +1116,7 @@ int GetMonitorPhysicalHeight(int monitor)
         // Calculate size on inches, then convert to millimeter
         if (ddpi > 0.0f) height = (int)((mode.h/ddpi)*25.4f);
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 
     return height;
 }
@@ -1137,7 +1137,7 @@ int GetMonitorRefreshRate(int monitor)
         SDL_GetCurrentDisplayMode(monitor, &mode);
         refresh = mode.refresh_rate;
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 
     return refresh;
 }
@@ -1155,7 +1155,7 @@ const char *GetMonitorName(int monitor)
     {
         return SDL_GetDisplayName(monitor);
     }
-    else TRACELOG(LOG_WARNING, "SDL: Failed to find selected monitor");
+    else TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to find selected monitor");
 
     return "";
 }
@@ -1184,7 +1184,7 @@ Vector2 GetWindowScaleDPI(void)
 #else
     // NOTE: SDL_GetWindowDisplayScale not available on SDL2
     // TODO: Implement the window scale factor calculation manually
-    TRACELOG(LOG_WARNING, "GetWindowScaleDPI() not implemented on target platform");
+    TRACELOG(LOG_LEVEL_WARNING, "GetWindowScaleDPI() not implemented on target platform");
 #endif
 
     return scale;
@@ -1222,19 +1222,19 @@ Image GetClipboardImage(void)
 
 #if SUPPORT_CLIPBOARD_IMAGE
 #if !SUPPORT_MODULE_RTEXTURES
-    TRACELOG(LOG_WARNING, "Enabling SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_MODULE_RTEXTURES to work properly");
+    TRACELOG(LOG_LEVEL_WARNING, "Enabling SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_MODULE_RTEXTURES to work properly");
     return image;
 #endif
 
 // It's nice to have support Bitmap on Linux as well, but not as necessary as Windows
 #if !SUPPORT_FILEFORMAT_BMP && defined(_WIN32)
-    TRACELOG(LOG_WARNING, "WARNING: Enabling SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_FILEFORMAT_BMP, specially on Windows");
+    TRACELOG(LOG_LEVEL_WARNING, "WARNING: Enabling SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_FILEFORMAT_BMP, specially on Windows");
     return image;
 #endif
 
 // From what I've tested applications on Wayland saves images on clipboard as PNG
 #if (!SUPPORT_FILEFORMAT_PNG || !SUPPORT_FILEFORMAT_JPG) && !defined(_WIN32)
-    TRACELOG(LOG_WARNING, "WARNING: Getting image from the clipboard might not work without SUPPORT_FILEFORMAT_PNG or SUPPORT_FILEFORMAT_JPG");
+    TRACELOG(LOG_LEVEL_WARNING, "WARNING: Getting image from the clipboard might not work without SUPPORT_FILEFORMAT_PNG or SUPPORT_FILEFORMAT_JPG");
 #endif
     // Let's hope compiler put these arrays in static memory
     const char *imageFormats[] = {
@@ -1263,13 +1263,13 @@ Image GetClipboardImage(void)
             image = LoadImageFromMemory(imageExtensions[i], fileData, (int)dataSize);
             if (IsImageValid(image))
             {
-                TRACELOG(LOG_INFO, "Clipboard: Got image from clipboard successfully: %s", imageExtensions[i]);
+                TRACELOG(LOG_LEVEL_INFO, "Clipboard: Got image from clipboard successfully: %s", imageExtensions[i]);
                 return image;
             }
         }
     }
 
-    if (!IsImageValid(image)) TRACELOG(LOG_WARNING, "Clipboard: Couldn't get clipboard data. ERROR: %s", SDL_GetError());
+    if (!IsImageValid(image)) TRACELOG(LOG_LEVEL_WARNING, "Clipboard: Couldn't get clipboard data. ERROR: %s", SDL_GetError());
 #endif // SUPPORT_CLIPBOARD_IMAGE
 
     return image;
@@ -1348,7 +1348,7 @@ double GetTime(void)
 void OpenURL(const char *url)
 {
     // Security check to (partially) avoid malicious code
-    if (strchr(url, '\'') != NULL) TRACELOG(LOG_WARNING, "SYSTEM: Provided URL could be potentially malicious, avoid [\'] character");
+    if (strchr(url, '\'') != NULL) TRACELOG(LOG_LEVEL_WARNING, "SYSTEM: Provided URL could be potentially malicious, avoid [\'] character");
     else SDL_OpenURL(url);
 }
 
@@ -1533,7 +1533,7 @@ void PollInputEvents(void)
 
                     CORE.Window.dropFileCount++;
                 }
-                else TRACELOG(LOG_WARNING, "FILE: Maximum drag and drop files at once is limited to 1024 files!");
+                else TRACELOG(LOG_LEVEL_WARNING, "FILE: Maximum drag and drop files at once is limited to 1024 files!");
 
             } break;
 
@@ -1815,7 +1815,7 @@ void PollInputEvents(void)
                         if (controllerName != NULL) strncpy(CORE.Input.Gamepad.name[nextAvailableSlot], controllerName, MAX_GAMEPAD_NAME_LENGTH - 1);
                         else strncpy(CORE.Input.Gamepad.name[nextAvailableSlot], "noname", 6);
                     }
-                    else TRACELOG(LOG_WARNING, "PLATFORM: Unable to open game controller [ERROR: %s]", SDL_GetError());
+                    else TRACELOG(LOG_LEVEL_WARNING, "PLATFORM: Unable to open game controller [ERROR: %s]", SDL_GetError());
                 }
             } break;
             case SDL_JOYDEVICEREMOVED:
@@ -2017,7 +2017,7 @@ int InitPlatform(void)
     // Initialize SDL internal global state, only required systems
     // NOTE: Not all systems need to be initialized, SDL_INIT_AUDIO is not required, managed by miniaudio
     int result = SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER | SDL_INIT_EVENTS | SDL_INIT_GAMECONTROLLER);
-    if (result < 0) { TRACELOG(LOG_WARNING, "SDL: Failed to initialize SDL"); return -1; }
+    if (result < 0) { TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to initialize SDL"); return -1; }
 
     // Initialize graphic device: display/window and graphic context
     //----------------------------------------------------------------------------
@@ -2114,7 +2114,7 @@ int InitPlatform(void)
     // REF: https://github.com/libsdl-org/SDL/commit/72fc6f86e5d605a3787222bc7dc18c5379047f4a
     const char *enableOSK = SDL_GetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD);
     if (enableOSK == NULL) SDL_SetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD, "0");
-    if (!SDL_StartTextInput(platform.window)) TRACELOG(LOG_WARNING, "SDL: Failed to start text input: %s", SDL_GetError());
+    if (!SDL_StartTextInput(platform.window)) TRACELOG(LOG_LEVEL_WARNING, "SDL: Failed to start text input: %s", SDL_GetError());
     if (enableOSK == NULL) SDL_SetHint(SDL_HINT_ENABLE_SCREEN_KEYBOARD, NULL);
 #else
     platform.window = SDL_CreateWindow(CORE.Window.title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, CORE.Window.screen.width, CORE.Window.screen.height, flags);
@@ -2141,12 +2141,12 @@ int InitPlatform(void)
         CORE.Window.currentFbo.width = CORE.Window.render.width;
         CORE.Window.currentFbo.height = CORE.Window.render.height;
 
-        TRACELOG(LOG_INFO, "DISPLAY: Device initialized successfully %s",
+        TRACELOG(LOG_LEVEL_INFO, "DISPLAY: Device initialized successfully %s",
             FLAG_IS_SET(CORE.Window.flags, FLAG_WINDOW_HIGHDPI)? "(HighDPI)" : "");
-        TRACELOG(LOG_INFO, "    > Display size: %i x %i", CORE.Window.display.width, CORE.Window.display.height);
-        TRACELOG(LOG_INFO, "    > Screen size:  %i x %i", CORE.Window.screen.width, CORE.Window.screen.height);
-        TRACELOG(LOG_INFO, "    > Render size:  %i x %i", CORE.Window.render.width, CORE.Window.render.height);
-        TRACELOG(LOG_INFO, "    > Viewport offsets: %i, %i", CORE.Window.renderOffset.x, CORE.Window.renderOffset.y);
+        TRACELOG(LOG_LEVEL_INFO, "    > Display size: %i x %i", CORE.Window.display.width, CORE.Window.display.height);
+        TRACELOG(LOG_LEVEL_INFO, "    > Screen size:  %i x %i", CORE.Window.screen.width, CORE.Window.screen.height);
+        TRACELOG(LOG_LEVEL_INFO, "    > Render size:  %i x %i", CORE.Window.render.width, CORE.Window.render.height);
+        TRACELOG(LOG_LEVEL_INFO, "    > Viewport offsets: %i, %i", CORE.Window.renderOffset.x, CORE.Window.renderOffset.y);
 
         if (platform.glContext != NULL)
         {
@@ -2159,7 +2159,7 @@ int InitPlatform(void)
     }
     else
     {
-        TRACELOG(LOG_FATAL, "PLATFORM: Failed to initialize graphics device");
+        TRACELOG(LOG_LEVEL_FATAL, "PLATFORM: Failed to initialize graphics device");
         return -1;
     }
 
@@ -2203,7 +2203,7 @@ int InitPlatform(void)
             strncpy(CORE.Input.Gamepad.name[i], joystickName, MAX_GAMEPAD_NAME_LENGTH - 1);
             CORE.Input.Gamepad.name[i][MAX_GAMEPAD_NAME_LENGTH - 1] = '\0';
         }
-        else TRACELOG(LOG_WARNING, "PLATFORM: Unable to open game controller [ERROR: %s]", SDL_GetError());
+        else TRACELOG(LOG_LEVEL_WARNING, "PLATFORM: Unable to open game controller [ERROR: %s]", SDL_GetError());
     }
 
     // Disable mouse events being interpreted as touch events
@@ -2233,9 +2233,9 @@ int InitPlatform(void)
     //----------------------------------------------------------------------------
 
 #if defined(USING_VERSION_SDL3)
-    TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (SDL3): Initialized successfully");
+    TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (SDL3): Initialized successfully");
 #else
-    TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (SDL2): Initialized successfully");
+    TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (SDL2): Initialized successfully");
 #endif
 
     return 0;

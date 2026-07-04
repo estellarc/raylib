@@ -82,7 +82,7 @@ int main(void)
                 SaveFileData(TextFormat("%s/screenrecording.gif", GetApplicationDirectory()), result.data, (unsigned int)result.dataSize);
                 msf_gif_free(result);
 
-                TraceLog(LOG_INFO, "Finish animated GIF recording");
+                TraceLog(LOG_LEVEL_INFO, "Finish animated GIF recording");
             }
             else
             {
@@ -91,7 +91,7 @@ int main(void)
                 gifFrameCounter = 0;
                 msf_gif_begin(&gifState, GetRenderWidth(), GetRenderHeight());
 
-                TraceLog(LOG_INFO, "Start animated GIF recording");
+                TraceLog(LOG_LEVEL_INFO, "Start animated GIF recording");
             }
         }
 

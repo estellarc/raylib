@@ -497,7 +497,7 @@ static void RGFW_cb_dropfunc(const RGFW_event *e)
 
         CORE.Window.dropFileCount++;
     }
-    else TRACELOG(LOG_WARNING, "FILE: Maximum drag and drop files at once is limited to 1024 files!");
+    else TRACELOG(LOG_LEVEL_WARNING, "FILE: Maximum drag and drop files at once is limited to 1024 files!");
 }
 static void RGFW_cb_windowresizefunc(const RGFW_event *e)
 {
@@ -858,7 +858,7 @@ void RestoreWindow(void)
 // Set window configuration state using flags
 void SetWindowState(unsigned int flags)
 {
-    if (!CORE.Window.ready) TRACELOG(LOG_WARNING, "WINDOW: SetWindowState does nothing before window initialization, Use \"SetConfigFlags\" instead");
+    if (!CORE.Window.ready) TRACELOG(LOG_LEVEL_WARNING, "WINDOW: SetWindowState does nothing before window initialization, Use \"SetConfigFlags\" instead");
 
     FLAG_SET(CORE.Window.flags, flags);
 
@@ -907,11 +907,11 @@ void SetWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_TRANSPARENT))
     {
-        TRACELOG(LOG_WARNING, "WINDOW: Framebuffer transparency can only be configured before window initialization");
+        TRACELOG(LOG_LEVEL_WARNING, "WINDOW: Framebuffer transparency can only be configured before window initialization");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_HIGHDPI))
     {
-        TRACELOG(LOG_WARNING, "WINDOW: High DPI can only be configured before window initialization");
+        TRACELOG(LOG_LEVEL_WARNING, "WINDOW: High DPI can only be configured before window initialization");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_MOUSE_PASSTHROUGH))
     {
@@ -929,7 +929,7 @@ void SetWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_INTERLACED_HINT))
     {
-        TRACELOG(LOG_WARNING, "RPI: Interlaced mode can only be configured before window initialization");
+        TRACELOG(LOG_LEVEL_WARNING, "RPI: Interlaced mode can only be configured before window initialization");
     }
 }
 
@@ -983,11 +983,11 @@ void ClearWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_TRANSPARENT))
     {
-        TRACELOG(LOG_WARNING, "WINDOW: Framebuffer transparency can only be configured before window initialization");
+        TRACELOG(LOG_LEVEL_WARNING, "WINDOW: Framebuffer transparency can only be configured before window initialization");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_HIGHDPI))
     {
-        TRACELOG(LOG_WARNING, "WINDOW: High DPI can only be configured before window initialization");
+        TRACELOG(LOG_LEVEL_WARNING, "WINDOW: High DPI can only be configured before window initialization");
     }
     if (FLAG_IS_SET(flags, FLAG_WINDOW_MOUSE_PASSTHROUGH))
     {
@@ -1005,7 +1005,7 @@ void ClearWindowState(unsigned int flags)
     }
     if (FLAG_IS_SET(flags, FLAG_INTERLACED_HINT))
     {
-        TRACELOG(LOG_WARNING, "RPI: Interlaced mode can only be configured before window initialization");
+        TRACELOG(LOG_LEVEL_WARNING, "RPI: Interlaced mode can only be configured before window initialization");
     }
 }
 
@@ -1014,7 +1014,7 @@ void SetWindowIcon(Image image)
 {
     if (image.format != PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
     {
-        TRACELOG(LOG_WARNING, "RGFW: Window icon image must be in R8G8B8A8 pixel format");
+        TRACELOG(LOG_LEVEL_WARNING, "RGFW: Window icon image must be in R8G8B8A8 pixel format");
         return;
     }
     RGFW_window_setIcon(platform.window, (u8 *)image.data, image.width, image.height, RGFW_formatRGBA8);
@@ -1036,7 +1036,7 @@ void SetWindowIcons(Image *images, int count)
         {
             if (images[i].format != PIXELFORMAT_UNCOMPRESSED_R8G8B8A8)
             {
-                TRACELOG(LOG_WARNING, "RGFW: Window icon image must be in R8G8B8A8 pixel format");
+                TRACELOG(LOG_LEVEL_WARNING, "RGFW: Window icon image must be in R8G8B8A8 pixel format");
                 continue;
             }
             if ((bigIcon == NULL) || ((images[i].width > bigIcon->width) && (images[i].height > bigIcon->height))) bigIcon = &images[i];
@@ -1328,7 +1328,7 @@ Image GetClipboardImage(void)
     int height = 0;
     fileData = (void *)Win32GetClipboardImageData(&width, &height, &dataSize);
 
-    if (fileData == NULL) TRACELOG(LOG_WARNING, "Clipboard image: Couldn't get clipboard data");
+    if (fileData == NULL) TRACELOG(LOG_LEVEL_WARNING, "Clipboard image: Couldn't get clipboard data");
     else image = LoadImageFromMemory(".bmp", (const unsigned char *)fileData, (int)dataSize);
 
 #elif defined(__linux__) && defined(DRGFW_X11)
@@ -1378,10 +1378,10 @@ Image GetClipboardImage(void)
     XDestroyWindow(dpy, win);
     XCloseDisplay(dpy);
 #else
-    TRACELOG(LOG_WARNING, "Clipboard image: PLATFORM_DESKTOP_RGFW doesn't implement GetClipboardImage() for this OS");
+    TRACELOG(LOG_LEVEL_WARNING, "Clipboard image: PLATFORM_DESKTOP_RGFW doesn't implement GetClipboardImage() for this OS");
 #endif // _WIN32
 #else
-    TRACELOG(LOG_WARNING, "Clipboard image: SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_MODULE_RTEXTURES to work properly");
+    TRACELOG(LOG_LEVEL_WARNING, "Clipboard image: SUPPORT_CLIPBOARD_IMAGE requires SUPPORT_MODULE_RTEXTURES to work properly");
 #endif // SUPPORT_CLIPBOARD_IMAGE
 
     return image;
@@ -1476,7 +1476,7 @@ double GetTime(void)
 void OpenURL(const char *url)
 {
     // Security check to (partially) avoid malicious code on target platform
-    if (strchr(url, '\'') != NULL) TRACELOG(LOG_WARNING, "SYSTEM: Provided URL could be potentially malicious, avoid [\'] character");
+    if (strchr(url, '\'') != NULL) TRACELOG(LOG_LEVEL_WARNING, "SYSTEM: Provided URL could be potentially malicious, avoid [\'] character");
     else
     {
         char *cmd = (char *)RL_CALLOC(strlen(url) + 32, sizeof(char));
@@ -1490,7 +1490,7 @@ void OpenURL(const char *url)
         sprintf(cmd, "open '%s'", url);
 #endif
         int result = system(cmd);
-        if (result == -1) TRACELOG(LOG_WARNING, "OpenURL() child process could not be created");
+        if (result == -1) TRACELOG(LOG_LEVEL_WARNING, "OpenURL() child process could not be created");
         RL_FREE(cmd);
     }
 }
@@ -1508,7 +1508,7 @@ int SetGamepadMappings(const char *mappings)
 // Set gamepad vibration
 void SetGamepadVibration(int gamepad, float leftMotor, float rightMotor, float duration)
 {
-    TRACELOG(LOG_WARNING, "SetGamepadVibration() unsupported on target platform");
+    TRACELOG(LOG_LEVEL_WARNING, "SetGamepadVibration() unsupported on target platform");
 }
 
 // Set mouse position XY
@@ -1528,7 +1528,7 @@ void SetMouseCursor(int cursor)
 // Get physical key name
 const char *GetKeyName(int key)
 {
-    TRACELOG(LOG_WARNING, "GetKeyName() unsupported on target platform");
+    TRACELOG(LOG_LEVEL_WARNING, "GetKeyName() unsupported on target platform");
 
     return "";
 }
@@ -1714,7 +1714,7 @@ int InitPlatform(void)
         int result = RGFW_init();
         if (result != 0)
         {
-            TRACELOG(LOG_WARNING, "RGFW: Failed to initialize RGFW");
+            TRACELOG(LOG_LEVEL_WARNING, "RGFW: Failed to initialize RGFW");
             return -1;
         }
 
@@ -1722,7 +1722,7 @@ int InitPlatform(void)
         RGFW_monitor *monitor = RGFW_getPrimaryMonitor();
         if (!monitor)
         {
-            TRACELOG(LOG_WARNING, "RGFW: Failed to get primary monitor");
+            TRACELOG(LOG_LEVEL_WARNING, "RGFW: Failed to get primary monitor");
             return -1;
         }
 
@@ -1821,7 +1821,7 @@ int InitPlatform(void)
     }
     else
     {
-        TRACELOG(LOG_FATAL, "PLATFORM: Failed to initialize graphics device");
+        TRACELOG(LOG_LEVEL_FATAL, "PLATFORM: Failed to initialize graphics device");
         return -1;
     }
 
@@ -1878,7 +1878,7 @@ int InitPlatform(void)
         platform.surfacePixels = RL_MALLOC(platform.surfaceWidth*platform.surfaceHeight*4);
         if (platform.surfacePixels == NULL)
         {
-            TRACELOG(LOG_FATAL, "PLATFORM: Failed to initialize software pixel buffer");
+            TRACELOG(LOG_LEVEL_FATAL, "PLATFORM: Failed to initialize software pixel buffer");
             return -1;
         }
 
@@ -1888,7 +1888,7 @@ int InitPlatform(void)
         {
             RL_FREE(platform.surfacePixels);
 
-            TRACELOG(LOG_FATAL, "PLATFORM: Failed to initialize software surface");
+            TRACELOG(LOG_LEVEL_FATAL, "PLATFORM: Failed to initialize software surface");
             return -1;
         }
     #endif
@@ -1912,12 +1912,12 @@ int InitPlatform(void)
     RGFW_setEventCallback(RGFW_keyPressed, (RGFW_genericFunc)RGFW_cb_keyfunc);
     RGFW_setEventCallback(RGFW_keyReleased, (RGFW_genericFunc)RGFW_cb_keyfunc);
 
-    TRACELOG(LOG_INFO, "DISPLAY: Device initialized successfully %s",
+    TRACELOG(LOG_LEVEL_INFO, "DISPLAY: Device initialized successfully %s",
         FLAG_IS_SET(CORE.Window.flags, FLAG_WINDOW_HIGHDPI)? "(HighDPI)" : "");
-    TRACELOG(LOG_INFO, "    > Display size: %i x %i", CORE.Window.display.width, CORE.Window.display.height);
-    TRACELOG(LOG_INFO, "    > Screen size:  %i x %i", CORE.Window.screen.width, CORE.Window.screen.height);
-    TRACELOG(LOG_INFO, "    > Render size:  %i x %i", CORE.Window.render.width, CORE.Window.render.height);
-    TRACELOG(LOG_INFO, "    > Viewport offsets: %i, %i", CORE.Window.renderOffset.x, CORE.Window.renderOffset.y);
+    TRACELOG(LOG_LEVEL_INFO, "    > Display size: %i x %i", CORE.Window.display.width, CORE.Window.display.height);
+    TRACELOG(LOG_LEVEL_INFO, "    > Screen size:  %i x %i", CORE.Window.screen.width, CORE.Window.screen.height);
+    TRACELOG(LOG_LEVEL_INFO, "    > Render size:  %i x %i", CORE.Window.render.width, CORE.Window.render.height);
+    TRACELOG(LOG_LEVEL_INFO, "    > Viewport offsets: %i, %i", CORE.Window.renderOffset.x, CORE.Window.renderOffset.y);
 
     // Load OpenGL extensions
     // NOTE: GL procedures address loader is required to load extensions
@@ -1944,60 +1944,60 @@ int InitPlatform(void)
 #if defined(RGFW_WAYLAND)
     if (rlGetVersion() == RL_OPENGL_SOFTWARE)
     {
-        if (RGFW_usingWayland()) TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - Wayland, Software): Initialized successfully");
-        else TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - X11, Software (fallback)): Initialized successfully");
+        if (RGFW_usingWayland()) TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - Wayland, Software): Initialized successfully");
+        else TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - X11, Software (fallback)): Initialized successfully");
     }
     else
     {
-        if (RGFW_usingWayland()) TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - Wayland): Initialized successfully");
-        else TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - X11 (fallback)): Initialized successfully");
+        if (RGFW_usingWayland()) TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - Wayland): Initialized successfully");
+        else TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - X11 (fallback)): Initialized successfully");
     }
 #elif defined(RGFW_X11)
     #if defined(__APPLE__)
         if (rlGetVersion() == RL_OPENGL_SOFTWARE)
         {
-            TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - X11, Software, (MacOS)): Initialized successfully");
+            TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - X11, Software, (MacOS)): Initialized successfully");
         }
         else
         {
-            TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - X11, (MacOS)): Initialized successfully");
+            TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - X11, (MacOS)): Initialized successfully");
         }
     #else
         if (rlGetVersion() == RL_OPENGL_SOFTWARE)
         {
-            TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - X11, Software): Initialized successfully");
+            TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - X11, Software): Initialized successfully");
         }
         else
         {
-            TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - X11): Initialized successfully");
+            TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - X11): Initialized successfully");
         }
     #endif
 #elif defined (RGFW_WINDOWS)
     if (rlGetVersion() == RL_OPENGL_SOFTWARE)
     {
-        TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - Win32, Software): Initialized successfully");
+        TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - Win32, Software): Initialized successfully");
     }
     else
     {
-        TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - Win32): Initialized successfully");
+        TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - Win32): Initialized successfully");
     }
 #elif defined(RGFW_WASM)
     if (rlGetVersion() == RL_OPENGL_SOFTWARE)
     {
-        TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - WASMs, Software): Initialized successfully");
+        TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - WASMs, Software): Initialized successfully");
     }
     else
     {
-        TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - WASMs): Initialized successfully");
+        TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - WASMs): Initialized successfully");
     }
 #elif defined(RGFW_MACOS)
     if (rlGetVersion() == RL_OPENGL_SOFTWARE)
     {
-        TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - MacOS, Software): Initialized successfully");
+        TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - MacOS, Software): Initialized successfully");
     }
     else
     {
-        TRACELOG(LOG_INFO, "PLATFORM: DESKTOP (RGFW - MacOS): Initialized successfully");
+        TRACELOG(LOG_LEVEL_INFO, "PLATFORM: DESKTOP (RGFW - MacOS): Initialized successfully");
     }
 #endif
 

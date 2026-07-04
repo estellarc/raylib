@@ -505,7 +505,7 @@
             </Overload>
         </KeyWord>
         <KeyWord name="TraceLog" func="yes">
-            <Overload retVal="void" descr="Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)">
+            <Overload retVal="void" descr="Show trace log messages (LOG_LEVEL_DEBUG, LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR...)">
                 <Param name="int logLevel" />
                 <Param name="const char *text" />
                 <Param name="..." />

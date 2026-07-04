@@ -193,7 +193,7 @@ int main(void)
                     currentPlayFrame = 0;
                     playFrameCounter = 0;
 
-                    TraceLog(LOG_INFO, "FINISH PLAYING!");
+                    TraceLog(LOG_LEVEL_INFO, "FINISH PLAYING!");
                     break;
                 }
             }
@@ -243,7 +243,7 @@ int main(void)
 
                     ExportAutomationEventList(aelist, "automation.rae");
 
-                    TraceLog(LOG_INFO, "RECORDED FRAMES: %i", aelist.count);
+                    TraceLog(LOG_LEVEL_INFO, "RECORDED FRAMES: %i", aelist.count);
                 }
                 else
                 {

@@ -32,10 +32,10 @@ void CustomTraceLog(int msgType, const char *text, va_list args)
 
     switch (msgType)
     {
-        case LOG_INFO: printf("[INFO] : "); break;
-        case LOG_ERROR: printf("[ERROR]: "); break;
-        case LOG_WARNING: printf("[WARN] : "); break;
-        case LOG_DEBUG: printf("[DEBUG]: "); break;
+        case LOG_LEVEL_INFO: printf("[INFO] : "); break;
+        case LOG_LEVEL_ERROR: printf("[ERROR]: "); break;
+        case LOG_LEVEL_WARNING: printf("[WARN] : "); break;
+        case LOG_LEVEL_DEBUG: printf("[DEBUG]: "); break;
         default: break;
     }
 

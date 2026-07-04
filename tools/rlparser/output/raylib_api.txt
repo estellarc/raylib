@@ -608,14 +608,14 @@ Enum 01: ConfigFlags (16 values)
 Enum 02: TraceLogLevel (8 values)
   Name: TraceLogLevel
   Description: Trace log level
-  Value[LOG_ALL]: 0
-  Value[LOG_TRACE]: 1
-  Value[LOG_DEBUG]: 2
-  Value[LOG_INFO]: 3
-  Value[LOG_WARNING]: 4
-  Value[LOG_ERROR]: 5
-  Value[LOG_FATAL]: 6
-  Value[LOG_NONE]: 7
+  Value[LOG_LEVEL_ALL]: 0
+  Value[LOG_LEVEL_TRACE]: 1
+  Value[LOG_LEVEL_DEBUG]: 2
+  Value[LOG_LEVEL_INFO]: 3
+  Value[LOG_LEVEL_WARNING]: 4
+  Value[LOG_LEVEL_ERROR]: 5
+  Value[LOG_LEVEL_FATAL]: 6
+  Value[LOG_LEVEL_NONE]: 7
 Enum 03: KeyboardKey (110 values)
   Name: KeyboardKey
   Description: Keyboard keys (US keyboard layout)
@@ -1573,7 +1573,7 @@ Function 107: SetTraceLogLevel() (1 input parameters)
 Function 108: TraceLog() (3 input parameters)
   Name: TraceLog
   Return type: void
-  Description: Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+  Description: Show trace log messages (LOG_LEVEL_DEBUG, LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR...)
   Param[1]: logLevel (type: int)
   Param[2]: text (type: const char *)
   Param[3]: args (type: ...)

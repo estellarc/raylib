@@ -398,7 +398,7 @@ RLAPI const char *raylib_version = RAYLIB_VERSION;  // raylib version exported s
 
 CoreData CORE = { 0 };                              // Global CORE state context
 
-static int logTypeLevel = LOG_INFO;                 // Minimum log type level
+static int logTypeLevel = LOG_LEVEL_INFO;                 // Minimum log type level
 
 static TraceLogCallback traceLog = NULL;            // TraceLog callback function pointer
 static LoadFileDataCallback loadFileData = NULL;    // LoadFileData callback function pointer
@@ -584,59 +584,59 @@ const char *TextFormat(const char *text, ...); // Formatting of text with variab
 // Initialize window and OpenGL context
 void InitWindow(int width, int height, const char *title)
 {
-    TRACELOG(LOG_INFO, "Initializing raylib %s", RAYLIB_VERSION);
+    TRACELOG(LOG_LEVEL_INFO, "Initializing raylib %s", RAYLIB_VERSION);
 
 #if defined(PLATFORM_DESKTOP_GLFW)
-    TRACELOG(LOG_INFO, "Platform backend: DESKTOP (GLFW)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: DESKTOP (GLFW)");
 #elif defined(PLATFORM_DESKTOP_SDL)
-    TRACELOG(LOG_INFO, "Platform backend: DESKTOP (SDL)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: DESKTOP (SDL)");
 #elif defined(PLATFORM_DESKTOP_RGFW)
-    TRACELOG(LOG_INFO, "Platform backend: DESKTOP (RGFW)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: DESKTOP (RGFW)");
 #elif defined(PLATFORM_DESKTOP_WIN32)
-    TRACELOG(LOG_INFO, "Platform backend: DESKTOP (WIN32)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: DESKTOP (WIN32)");
 #elif defined(PLATFORM_WEB_RGFW)
-    TRACELOG(LOG_INFO, "Platform backend: WEB (RGFW) (HTML5)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: WEB (RGFW) (HTML5)");
 #elif defined(PLATFORM_WEB)
-    TRACELOG(LOG_INFO, "Platform backend: WEB (HTML5)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: WEB (HTML5)");
 #elif defined(PLATFORM_DRM)
-    TRACELOG(LOG_INFO, "Platform backend: NATIVE DRM");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: NATIVE DRM");
 #elif defined(PLATFORM_ANDROID)
-    TRACELOG(LOG_INFO, "Platform backend: ANDROID");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: ANDROID");
 #elif defined(PLATFORM_MEMORY)
-    TRACELOG(LOG_INFO, "Platform backend: MEMORY (No OS)");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: MEMORY (No OS)");
 #else
     // TODO: Include your custom platform backend!
     // i.e software rendering backend or console backend!
-    TRACELOG(LOG_INFO, "Platform backend: CUSTOM");
+    TRACELOG(LOG_LEVEL_INFO, "Platform backend: CUSTOM");
 #endif
 
-    TRACELOG(LOG_INFO, "Supported raylib modules:");
-    TRACELOG(LOG_INFO, "    > rcore:..... loaded (mandatory)");
-    TRACELOG(LOG_INFO, "    > rlgl:...... loaded (mandatory)");
+    TRACELOG(LOG_LEVEL_INFO, "Supported raylib modules:");
+    TRACELOG(LOG_LEVEL_INFO, "    > rcore:..... loaded (mandatory)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rlgl:...... loaded (mandatory)");
 #if SUPPORT_MODULE_RSHAPES
-    TRACELOG(LOG_INFO, "    > rshapes:... loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rshapes:... loaded (optional)");
 #else
-    TRACELOG(LOG_INFO, "    > rshapes:... not loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rshapes:... not loaded (optional)");
 #endif
 #if SUPPORT_MODULE_RTEXTURES
-    TRACELOG(LOG_INFO, "    > rtextures:. loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rtextures:. loaded (optional)");
 #else
-    TRACELOG(LOG_INFO, "    > rtextures:. not loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rtextures:. not loaded (optional)");
 #endif
 #if SUPPORT_MODULE_RTEXT
-    TRACELOG(LOG_INFO, "    > rtext:..... loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rtext:..... loaded (optional)");
 #else
-    TRACELOG(LOG_INFO, "    > rtext:..... not loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rtext:..... not loaded (optional)");
 #endif
 #if SUPPORT_MODULE_RMODELS
-    TRACELOG(LOG_INFO, "    > rmodels:... loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rmodels:... loaded (optional)");
 #else
-    TRACELOG(LOG_INFO, "    > rmodels:... not loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > rmodels:... not loaded (optional)");
 #endif
 #if SUPPORT_MODULE_RAUDIO
-    TRACELOG(LOG_INFO, "    > raudio:.... loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > raudio:.... loaded (optional)");
 #else
-    TRACELOG(LOG_INFO, "    > raudio:.... not loaded (optional)");
+    TRACELOG(LOG_LEVEL_INFO, "    > raudio:.... not loaded (optional)");
 #endif
 
     // Initialize window data
@@ -660,7 +660,7 @@ void InitWindow(int width, int height, const char *title)
 
     if (result != 0)
     {
-        TRACELOG(LOG_WARNING, "SYSTEM: Failed to initialize platform");
+        TRACELOG(LOG_LEVEL_WARNING, "SYSTEM: Failed to initialize platform");
         return;
     }
 
@@ -716,7 +716,7 @@ void InitWindow(int width, int height, const char *title)
     // Initialize random seed
     SetRandomSeed((unsigned int)time(NULL));
 
-    TRACELOG(LOG_INFO, "SYSTEM: Working Directory: %s", GetWorkingDirectory());
+    TRACELOG(LOG_LEVEL_INFO, "SYSTEM: Working Directory: %s", GetWorkingDirectory());
 }
 
 // Close window and unload OpenGL context
@@ -734,7 +734,7 @@ void CloseWindow(void)
     //--------------------------------------------------------------
 
     CORE.Window.ready = false;
-    TRACELOG(LOG_INFO, "Window closed successfully");
+    TRACELOG(LOG_LEVEL_INFO, "Window closed successfully");
 }
 
 // Check if window has been initialized successfully
@@ -1192,7 +1192,7 @@ VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device)
         config.eyeViewportLeft[3] = device.vResolution;
         */
     }
-    else TRACELOG(LOG_WARNING, "RLGL: VR Simulator not supported on OpenGL 1.1");
+    else TRACELOG(LOG_LEVEL_WARNING, "RLGL: VR Simulator not supported on OpenGL 1.1");
 
     return config;
 }
@@ -1200,7 +1200,7 @@ VrStereoConfig LoadVrStereoConfig(VrDeviceInfo device)
 // Unload VR stereo config properties
 void UnloadVrStereoConfig(VrStereoConfig config)
 {
-    TRACELOG(LOG_INFO, "UnloadVrStereoConfig not implemented in rcore.c");
+    TRACELOG(LOG_LEVEL_INFO, "UnloadVrStereoConfig not implemented in rcore.c");
 }
 
 //----------------------------------------------------------------------------------
@@ -1219,7 +1219,7 @@ Shader LoadShader(const char *vsFileName, const char *fsFileName)
     if (vsFileName != NULL) vShaderStr = LoadFileText(vsFileName);
     if (fsFileName != NULL) fShaderStr = LoadFileText(fsFileName);
 
-    if ((vShaderStr == NULL) && (fShaderStr == NULL)) TRACELOG(LOG_WARNING, "SHADER: Shader files provided are not valid, using default shader");
+    if ((vShaderStr == NULL) && (fShaderStr == NULL)) TRACELOG(LOG_LEVEL_WARNING, "SHADER: Shader files provided are not valid, using default shader");
 
     shader = LoadShaderFromMemory(vShaderStr, fShaderStr);
 
@@ -1573,7 +1573,7 @@ void SetTargetFPS(int fps)
     if (fps < 1) CORE.Time.target = 0.0;
     else CORE.Time.target = 1.0/(double)fps;
 
-    TRACELOG(LOG_INFO, "TIMER: Target time per frame: %02.03f milliseconds", (float)CORE.Time.target*1000.0f);
+    TRACELOG(LOG_LEVEL_INFO, "TIMER: Target time per frame: %02.03f milliseconds", (float)CORE.Time.target*1000.0f);
 }
 
 // Get current FPS
@@ -1719,7 +1719,7 @@ int GetRandomValue(int min, int max)
     // NOTE: Depending on the library it can be as low as 32767
     if ((unsigned int)(max - min) > (unsigned int)RAND_MAX)
     {
-        TRACELOG(LOG_WARNING, "Invalid GetRandomValue() arguments, range should not be higher than %i", RAND_MAX);
+        TRACELOG(LOG_LEVEL_WARNING, "Invalid GetRandomValue() arguments, range should not be higher than %i", RAND_MAX);
     }
 
     // NOTE: This one-line approach produces a non-uniform distribution,
@@ -1809,7 +1809,7 @@ void TakeScreenshot(const char *fileName)
 {
 #if SUPPORT_MODULE_RTEXTURES
     // Security check to (partially) avoid malicious code
-    if (strchr(fileName, '\'') != NULL) { TRACELOG(LOG_WARNING, "SYSTEM: Provided fileName could be potentially malicious, avoid [\'] character"); return; }
+    if (strchr(fileName, '\'') != NULL) { TRACELOG(LOG_LEVEL_WARNING, "SYSTEM: Provided fileName could be potentially malicious, avoid [\'] character"); return; }
 
     // Apply content scaling if required
     Vector2 scale = { 1.0f, 1.0f };
@@ -1824,10 +1824,10 @@ void TakeScreenshot(const char *fileName)
     ExportImage(image, path); // WARNING: Module required: rtextures
     RL_FREE(imgData);
 
-    if (FileExists(path)) TRACELOG(LOG_INFO, "SYSTEM: [%s] Screenshot taken successfully", path);
-    else TRACELOG(LOG_WARNING, "SYSTEM: [%s] Screenshot could not be saved", path);
+    if (FileExists(path)) TRACELOG(LOG_LEVEL_INFO, "SYSTEM: [%s] Screenshot taken successfully", path);
+    else TRACELOG(LOG_LEVEL_WARNING, "SYSTEM: [%s] Screenshot could not be saved", path);
 #else
-    TRACELOG(LOG_WARNING,"IMAGE: ExportImage() requires module: rtextures");
+    TRACELOG(LOG_LEVEL_WARNING,"IMAGE: ExportImage() requires module: rtextures");
 #endif
 }
 
@@ -1837,7 +1837,7 @@ void TakeScreenshot(const char *fileName)
 // To configure window states after creation, use SetWindowState()
 void SetConfigFlags(unsigned int flags)
 {
-    if (CORE.Window.ready) TRACELOG(LOG_WARNING, "WINDOW: SetConfigFlags called after window initialization, Use \"SetWindowState\" to set flags instead");
+    if (CORE.Window.ready) TRACELOG(LOG_LEVEL_WARNING, "WINDOW: SetConfigFlags called after window initialization, Use \"SetWindowState\" to set flags instead");
 
     // Selected flags are set but not evaluated at this point,
     // flag evaluation happens at InitWindow() or SetWindowState()
@@ -1852,7 +1852,7 @@ void SetConfigFlags(unsigned int flags)
 // Set the current threshold (minimum) log level
 void SetTraceLogLevel(int logType) { logTypeLevel = logType; }
 
-// Show trace log messages (LOG_INFO, LOG_WARNING, LOG_ERROR, LOG_DEBUG)
+// Show trace log messages (LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR, LOG_LEVEL_DEBUG)
 void TraceLog(int logType, const char *text, ...)
 {
 #if SUPPORT_TRACELOG
@@ -1872,12 +1872,12 @@ void TraceLog(int logType, const char *text, ...)
 #if defined(PLATFORM_ANDROID)
     switch (logType)
     {
-        case LOG_TRACE: __android_log_vprint(ANDROID_LOG_VERBOSE, "raylib", text, args); break;
-        case LOG_DEBUG: __android_log_vprint(ANDROID_LOG_DEBUG, "raylib", text, args); break;
-        case LOG_INFO: __android_log_vprint(ANDROID_LOG_INFO, "raylib", text, args); break;
-        case LOG_WARNING: __android_log_vprint(ANDROID_LOG_WARN, "raylib", text, args); break;
-        case LOG_ERROR: __android_log_vprint(ANDROID_LOG_ERROR, "raylib", text, args); break;
-        case LOG_FATAL: __android_log_vprint(ANDROID_LOG_FATAL, "raylib", text, args); break;
+        case LOG_LEVEL_TRACE: __android_log_vprint(ANDROID_LOG_VERBOSE, "raylib", text, args); break;
+        case LOG_LEVEL_DEBUG: __android_log_vprint(ANDROID_LOG_LEVEL_DEBUG, "raylib", text, args); break;
+        case LOG_LEVEL_INFO: __android_log_vprint(ANDROID_LOG_LEVEL_INFO, "raylib", text, args); break;
+        case LOG_LEVEL_WARNING: __android_log_vprint(ANDROID_LOG_WARN, "raylib", text, args); break;
+        case LOG_LEVEL_ERROR: __android_log_vprint(ANDROID_LOG_LEVEL_ERROR, "raylib", text, args); break;
+        case LOG_LEVEL_FATAL: __android_log_vprint(ANDROID_LOG_LEVEL_FATAL, "raylib", text, args); break;
         default: break;
     }
 #else
@@ -1885,12 +1885,12 @@ void TraceLog(int logType, const char *text, ...)
 
     switch (logType)
     {
-        case LOG_TRACE: strncpy(buffer, "TRACE: ", 8); break;
-        case LOG_DEBUG: strncpy(buffer, "DEBUG: ", 8); break;
-        case LOG_INFO: strncpy(buffer, "INFO: ", 7); break;
-        case LOG_WARNING: strncpy(buffer, "WARNING: ", 10); break;
-        case LOG_ERROR: strncpy(buffer, "ERROR: ", 8); break;
-        case LOG_FATAL: strncpy(buffer, "FATAL: ", 8); break;
+        case LOG_LEVEL_TRACE: strncpy(buffer, "TRACE: ", 8); break;
+        case LOG_LEVEL_DEBUG: strncpy(buffer, "DEBUG: ", 8); break;
+        case LOG_LEVEL_INFO: strncpy(buffer, "INFO: ", 7); break;
+        case LOG_LEVEL_WARNING: strncpy(buffer, "WARNING: ", 10); break;
+        case LOG_LEVEL_ERROR: strncpy(buffer, "ERROR: ", 8); break;
+        case LOG_LEVEL_FATAL: strncpy(buffer, "FATAL: ", 8); break;
         default: break;
     }
 
@@ -1903,7 +1903,7 @@ void TraceLog(int logType, const char *text, ...)
 
     va_end(args);
 
-    if (logType == LOG_FATAL) exit(EXIT_FAILURE);  // If fatal logging, exit program
+    if (logType == LOG_LEVEL_FATAL) exit(EXIT_FAILURE);  // If fatal logging, exit program
 #endif
 }
 
@@ -1973,7 +1973,7 @@ unsigned char *LoadFileData(const char *fileName, int *dataSize)
                     // dataSize is unified along raylib as a 'int' type, so, for file-sizes >INT_MAX (2147483647 bytes) there is a limitation
                     if (count > 2147483647)
                     {
-                        TRACELOG(LOG_WARNING, "FILEIO: [%s] File is bigger than 2147483647 bytes, avoid using LoadFileData()", fileName);
+                        TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] File is bigger than 2147483647 bytes, avoid using LoadFileData()", fileName);
 
                         RL_FREE(data);
                         data = NULL;
@@ -1982,19 +1982,19 @@ unsigned char *LoadFileData(const char *fileName, int *dataSize)
                     {
                         *dataSize = (int)count;
 
-                        if ((*dataSize) != size) TRACELOG(LOG_WARNING, "FILEIO: [%s] File partially loaded (%i bytes out of %i)", fileName, *dataSize, size);
-                        else TRACELOG(LOG_INFO, "FILEIO: [%s] File loaded successfully", fileName);
+                        if ((*dataSize) != size) TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] File partially loaded (%i bytes out of %i)", fileName, *dataSize, size);
+                        else TRACELOG(LOG_LEVEL_INFO, "FILEIO: [%s] File loaded successfully", fileName);
                     }
                 }
-                else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to allocated memory for file reading", fileName);
+                else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to allocated memory for file reading", fileName);
             }
-            else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to read file", fileName);
+            else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to read file", fileName);
 
             fclose(file);
         }
-        else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to open file", fileName);
+        else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to open file", fileName);
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: File name provided is not valid");
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: File name provided is not valid");
 
     return data;
 }
@@ -2022,16 +2022,16 @@ bool SaveFileData(const char *fileName, const void *data, int dataSize)
             // and expects a size_t input value but as dataSize is limited to INT_MAX (2147483647 bytes), there shouldn't be a problem
             int count = (int)fwrite(data, sizeof(unsigned char), dataSize, file);
 
-            if (count == 0) TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to write file", fileName);
-            else if (count != dataSize) TRACELOG(LOG_WARNING, "FILEIO: [%s] File partially written", fileName);
-            else TRACELOG(LOG_INFO, "FILEIO: [%s] File saved successfully", fileName);
+            if (count == 0) TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to write file", fileName);
+            else if (count != dataSize) TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] File partially written", fileName);
+            else TRACELOG(LOG_LEVEL_INFO, "FILEIO: [%s] File saved successfully", fileName);
 
             int closed = fclose(file);
             if (closed == 0) result = true;
         }
-        else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to open file", fileName);
+        else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to open file", fileName);
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: File name provided is not valid");
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: File name provided is not valid");
 
     return result;
 }
@@ -2083,8 +2083,8 @@ bool ExportDataAsCode(const unsigned char *data, int dataSize, const char *fileN
 
     RL_FREE(txtData);
 
-    if (result != 0) TRACELOG(LOG_INFO, "FILEIO: [%s] Data as code exported successfully", fileName);
-    else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to export data as code", fileName);
+    if (result != 0) TRACELOG(LOG_LEVEL_INFO, "FILEIO: [%s] Data as code exported successfully", fileName);
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to export data as code", fileName);
 
     return result;
 }
@@ -2125,17 +2125,17 @@ char *LoadFileText(const char *fileName)
                     // Zero-terminate the string
                     text[count] = '\0';
 
-                    TRACELOG(LOG_INFO, "FILEIO: [%s] Text file loaded successfully", fileName);
+                    TRACELOG(LOG_LEVEL_INFO, "FILEIO: [%s] Text file loaded successfully", fileName);
                 }
-                else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to allocated memory for file reading", fileName);
+                else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to allocated memory for file reading", fileName);
             }
-            else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to read text file", fileName);
+            else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to read text file", fileName);
 
             fclose(file);
         }
-        else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to open text file", fileName);
+        else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to open text file", fileName);
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: File name provided is not valid");
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: File name provided is not valid");
 
     return text;
 }
@@ -2161,15 +2161,15 @@ bool SaveFileText(const char *fileName, const char *text)
         {
             int count = fprintf(file, "%s", text);
 
-            if (count < 0) TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to write text file", fileName);
-            else TRACELOG(LOG_INFO, "FILEIO: [%s] Text file saved successfully", fileName);
+            if (count < 0) TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to write text file", fileName);
+            else TRACELOG(LOG_LEVEL_INFO, "FILEIO: [%s] Text file saved successfully", fileName);
 
             int closed = fclose(file);
             if (closed == 0) result = true;
         }
-        else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to open text file", fileName);
+        else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to open text file", fileName);
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: File name provided is not valid");
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: File name provided is not valid");
 
     return result;
 }
@@ -2270,12 +2270,12 @@ int FileMove(const char *srcPath, const char *dstPath)
             if (FileExists(dstPath) && (GetFileLength(srcPath) == GetFileLength(dstPath)))
             {
                 result = FileRemove(srcPath);
-                if (result != 0) TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to remove source file after copy", srcPath);
+                if (result != 0) TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to remove source file after copy", srcPath);
             }
-            else TRACELOG(LOG_WARNING, "FILEIO: [%s] Failed to copy file to [%s]", srcPath, dstPath);
+            else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Failed to copy file to [%s]", srcPath, dstPath);
         }
     }
-	else TRACELOG(LOG_WARNING, "FILEIO: [%s] Source file does not exist", srcPath);
+	else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: [%s] Source file does not exist", srcPath);
 
     return result;
 }
@@ -2300,7 +2300,7 @@ int FileTextReplace(const char *fileName, const char *search, const char *replac
         UnloadFileText(fileText);
     }
 #else
-    TRACELOG(LOG_WARNING, "FILE: File text replace requires [rtext] module");
+    TRACELOG(LOG_LEVEL_WARNING, "FILE: File text replace requires [rtext] module");
 #endif
 
     return result;
@@ -2440,7 +2440,7 @@ int GetFileLength(const char *fileName)
         long int fileSize = ftell(file);
 
         // Check for size overflow (INT_MAX)
-        if (fileSize > 2147483647) TRACELOG(LOG_WARNING, "[%s] File size overflows expected limit, do not use GetFileLength()", fileName);
+        if (fileSize > 2147483647) TRACELOG(LOG_LEVEL_WARNING, "[%s] File size overflows expected limit, do not use GetFileLength()", fileName);
         else size = (int)fileSize;
 
         fclose(file);
@@ -2751,11 +2751,11 @@ FilePathList LoadDirectoryFilesEx(const char *basePath, const char *filter, bool
         // Security check: read files.count should match fileCounter
         if (files.count != fileCounter)
         {
-            TRACELOG(LOG_WARNING, "FILEIO: Read files count (%u) does not match capacity allocated (%u)", files.count, fileCounter);
+            TRACELOG(LOG_LEVEL_WARNING, "FILEIO: Read files count (%u) does not match capacity allocated (%u)", files.count, fileCounter);
             files.count = fileCounter; // Avoid memory leak when unloading this FilePathList
         }
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: Directory cannot be opened (%s)", basePath);  // Maybe it's a file...
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: Directory cannot be opened (%s)", basePath);  // Maybe it's a file...
 
     return files;
 }
@@ -2816,8 +2816,8 @@ int ChangeDirectory(const char *dirPath)
     // depending on the filesystem, other errors can be returned
     int result = CHDIR(dirPath);
 
-    if (result != 0) TRACELOG(LOG_WARNING, "SYSTEM: Failed to change to directory: %s", dirPath);
-    else TRACELOG(LOG_INFO, "SYSTEM: Working Directory: %s", dirPath);
+    if (result != 0) TRACELOG(LOG_LEVEL_WARNING, "SYSTEM: Failed to change to directory: %s", dirPath);
+    else TRACELOG(LOG_LEVEL_INFO, "SYSTEM: Working Directory: %s", dirPath);
 
     return result;
 }
@@ -2972,7 +2972,7 @@ unsigned int GetDirectoryFileCountEx(const char *basePath, const char *filter, b
                 // Don't add to count if path too long
                 if ((pathLength < 0) || (pathLength >= MAX_FILEPATH_LENGTH))
                 {
-                    TRACELOG(LOG_WARNING, "FILEIO: Path longer than %d characters (%s...)", MAX_FILEPATH_LENGTH, basePath);
+                    TRACELOG(LOG_LEVEL_WARNING, "FILEIO: Path longer than %d characters (%s...)", MAX_FILEPATH_LENGTH, basePath);
                 }
                 else if (IsPathFile(path))
                 {
@@ -2988,7 +2988,7 @@ unsigned int GetDirectoryFileCountEx(const char *basePath, const char *filter, b
         }
         closedir(dir);
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: Directory cannot be opened (%s)", basePath);  // Maybe it's a file...
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: Directory cannot be opened (%s)", basePath);  // Maybe it's a file...
     return fileCounter;
 }
 
@@ -3012,7 +3012,7 @@ unsigned char *CompressData(const unsigned char *data, int dataSize, int *compDa
     *compDataSize = sdeflate(sdefl, compData, data, dataSize, COMPRESSION_QUALITY_DEFLATE);   // Compression level 8, same as stbiw
     RL_FREE(sdefl);
 
-    TRACELOG(LOG_INFO, "SYSTEM: Compress data: Original size: %i -> Comp. size: %i", dataSize, *compDataSize);
+    TRACELOG(LOG_LEVEL_INFO, "SYSTEM: Compress data: Original size: %i -> Comp. size: %i", dataSize, *compDataSize);
 #endif
 
     return compData;
@@ -3036,7 +3036,7 @@ unsigned char *DecompressData(const unsigned char *compData, int compDataSize, i
     memset(data0, 0, MAX_DECOMPRESSION_SIZE*1024*1024); // Wipe memory, is memset() safe?
     RL_FREE(data0);
 
-    TRACELOG(LOG_INFO, "SYSTEM: Decompress data: Comp. size: %i -> Original size: %i", compDataSize, size);
+    TRACELOG(LOG_LEVEL_INFO, "SYSTEM: Decompress data: Comp. size: %i -> Original size: %i", compDataSize, size);
 
     *dataSize = size;
 #endif
@@ -3094,7 +3094,7 @@ char *EncodeDataBase64(const unsigned char *data, int dataSize, int *outputSize)
     encodedData[outputCount] = '\0';
     outputCount++;
 
-    if (outputCount != estimatedOutputSize) TRACELOG(LOG_WARNING, "BASE64: Output size differs from estimation");
+    if (outputCount != estimatedOutputSize) TRACELOG(LOG_LEVEL_WARNING, "BASE64: Output size differs from estimation");
 
     *outputSize = estimatedOutputSize;
     return encodedData;
@@ -3139,7 +3139,7 @@ unsigned char *DecodeDataBase64(const char *text, int *outputSize)
         // Every 4 sextets must generate 3 octets
         if ((i + 2) >= dataSize)
         {
-            TRACELOG(LOG_WARNING, "BASE64: Decoding error: Input data size is not valid");
+            TRACELOG(LOG_LEVEL_WARNING, "BASE64: Decoding error: Input data size is not valid");
             break;
         }
 
@@ -3152,7 +3152,7 @@ unsigned char *DecodeDataBase64(const char *text, int *outputSize)
 
         if ((outputCount + 3) > maxOutputSize)
         {
-            TRACELOG(LOG_WARNING, "BASE64: Decoding error: Output data size is too small");
+            TRACELOG(LOG_LEVEL_WARNING, "BASE64: Decoding error: Output data size is too small");
             break;
         }
 
@@ -3163,7 +3163,7 @@ unsigned char *DecodeDataBase64(const char *text, int *outputSize)
         i += 4;
     }
 
-    if (estimatedOutputSize != (outputCount - padding)) TRACELOG(LOG_WARNING, "BASE64: Decoded size differs from estimation");
+    if (estimatedOutputSize != (outputCount - padding)) TRACELOG(LOG_LEVEL_WARNING, "BASE64: Decoded size differs from estimation");
 
     *outputSize = estimatedOutputSize;
     return decodedData;
@@ -3561,7 +3561,7 @@ AutomationEventList LoadAutomationEventList(const char *fileName)
     list.events = (AutomationEvent *)RL_CALLOC(MAX_AUTOMATION_EVENTS, sizeof(AutomationEvent));
     list.capacity = MAX_AUTOMATION_EVENTS;
 
-    if (fileName == NULL) TRACELOG(LOG_INFO, "AUTOMATION: New empty events list loaded successfully");
+    if (fileName == NULL) TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: New empty events list loaded successfully");
     else
     {
         // Load automation events file (binary)
@@ -3577,7 +3577,7 @@ AutomationEventList LoadAutomationEventList(const char *fileName)
         if ((fileId[0] == 'r') && (fileId[1] == 'A') && (fileId[2] == 'E') && (fileId[1] == ' '))
         {
             fread(&eventCount, sizeof(int), 1, raeFile);
-            TRACELOG(LOG_WARNING, "Events loaded: %i\n", eventCount);
+            TRACELOG(LOG_LEVEL_WARNING, "Events loaded: %i\n", eventCount);
             fread(events, sizeof(AutomationEvent), eventCount, raeFile);
         }
 
@@ -3595,7 +3595,7 @@ AutomationEventList LoadAutomationEventList(const char *fileName)
             char eventDesc[64] = { 0 };
 
             char *result = fgets(buffer, 256, raeFile);
-            if (result != buffer) TRACELOG(LOG_WARNING, "AUTOMATION: [%s] Issue reading line to buffer", fileName);
+            if (result != buffer) TRACELOG(LOG_LEVEL_WARNING, "AUTOMATION: [%s] Issue reading line to buffer", fileName);
 
             while (!feof(raeFile))
             {
@@ -3613,21 +3613,21 @@ AutomationEventList LoadAutomationEventList(const char *fileName)
                 }
 
                 result = fgets(buffer, 256, raeFile);
-                if (result != buffer) TRACELOG(LOG_WARNING, "AUTOMATION: [%s] Issue reading line to buffer", fileName);
+                if (result != buffer) TRACELOG(LOG_LEVEL_WARNING, "AUTOMATION: [%s] Issue reading line to buffer", fileName);
             }
 
             if (counter != list.count)
             {
-                TRACELOG(LOG_WARNING, "AUTOMATION: Events read from file [%i] do not mach event count specified [%i]", counter, list.count);
+                TRACELOG(LOG_LEVEL_WARNING, "AUTOMATION: Events read from file [%i] do not mach event count specified [%i]", counter, list.count);
                 list.count = counter;
             }
 
             fclose(raeFile);
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Events file loaded successfully");
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Events file loaded successfully");
         }
 
-        TRACELOG(LOG_INFO, "AUTOMATION: Events loaded from file: %i", list.count);
+        TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Events loaded from file: %i", list.count);
     }
 #endif
     return list;
@@ -3803,7 +3803,7 @@ void PlayAutomationEvent(AutomationEvent event)
             default: break;
         }
 
-        TRACELOG(LOG_INFO, "AUTOMATION PLAY: Frame: %i | Event type: %i | Event parameters: %i, %i, %i", event.frame, event.type, event.params[0], event.params[1], event.params[2]);
+        TRACELOG(LOG_LEVEL_INFO, "AUTOMATION PLAY: Frame: %i | Event type: %i | Event parameters: %i, %i, %i", event.frame, event.type, event.params[0], event.params[1], event.params[2]);
     }
 #endif
 }
@@ -4208,7 +4208,7 @@ Vector2 GetTouchPosition(int index)
     Vector2 position = { -1.0f, -1.0f };
 
     if (index < MAX_TOUCH_POINTS) position = CORE.Input.Touch.position[index];
-    else TRACELOG(LOG_WARNING, "INPUT: Required touch point out of range (Max touch points: %i)", MAX_TOUCH_POINTS);
+    else TRACELOG(LOG_LEVEL_WARNING, "INPUT: Required touch point out of range (Max touch points: %i)", MAX_TOUCH_POINTS);
 
     return position;
 }
@@ -4255,7 +4255,7 @@ void InitTimer(void)
     {
         CORE.Time.base = (unsigned long long)now.tv_sec*1000000000LLU + (unsigned long long)now.tv_nsec;
     }
-    else TRACELOG(LOG_WARNING, "TIMER: Hi-resolution timer not available");
+    else TRACELOG(LOG_LEVEL_WARNING, "TIMER: Hi-resolution timer not available");
 #endif
 
     CORE.Time.previous = GetTime(); // Get time as double
@@ -4308,7 +4308,7 @@ static void ScanDirectoryFiles(const char *basePath, FilePathList *files, const 
 
                 if ((pathLength < 0) || (pathLength >= MAX_FILEPATH_LENGTH))
                 {
-                    TRACELOG(LOG_WARNING, "FILEIO: Path longer than %d characters (%s...)", MAX_FILEPATH_LENGTH, basePath);
+                    TRACELOG(LOG_LEVEL_WARNING, "FILEIO: Path longer than %d characters (%s...)", MAX_FILEPATH_LENGTH, basePath);
                 }
                 else if (IsPathFile(path))
                 {
@@ -4334,7 +4334,7 @@ static void ScanDirectoryFiles(const char *basePath, FilePathList *files, const 
 
         closedir(dir);
     }
-    else TRACELOG(LOG_WARNING, "FILEIO: Directory cannot be opened (%s)", basePath);  // Maybe it's a file...
+    else TRACELOG(LOG_LEVEL_WARNING, "FILEIO: Directory cannot be opened (%s)", basePath);  // Maybe it's a file...
 }
 
 #if SUPPORT_AUTOMATION_EVENTS
@@ -4358,7 +4358,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = 0;
             currentEventList->events[currentEventList->count].params[2] = 0;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_KEY_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_KEY_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4373,7 +4373,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = 0;
             currentEventList->events[currentEventList->count].params[2] = 0;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_KEY_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_KEY_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4394,7 +4394,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = 0;
             currentEventList->events[currentEventList->count].params[2] = 0;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_BUTTON_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_BUTTON_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4409,7 +4409,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = 0;
             currentEventList->events[currentEventList->count].params[2] = 0;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_BUTTON_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_BUTTON_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4426,7 +4426,7 @@ static void RecordAutomationEvent(void)
         currentEventList->events[currentEventList->count].params[1] = (int)CORE.Input.Mouse.currentPosition.y;
         currentEventList->events[currentEventList->count].params[2] = 0;
 
-        TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_POSITION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+        TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_POSITION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
         currentEventList->count++;
 
         if (currentEventList->count == currentEventList->capacity) return;    // Security check
@@ -4442,7 +4442,7 @@ static void RecordAutomationEvent(void)
         currentEventList->events[currentEventList->count].params[1] = (int)CORE.Input.Mouse.currentWheelMove.y;
         currentEventList->events[currentEventList->count].params[2] = 0;
 
-        TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_WHEEL_MOTION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+        TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_MOUSE_WHEEL_MOTION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
         currentEventList->count++;
 
         if (currentEventList->count == currentEventList->capacity) return;    // Security check
@@ -4462,7 +4462,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = 0;
             currentEventList->events[currentEventList->count].params[2] = 0;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_TOUCH_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_TOUCH_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4477,7 +4477,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = 0;
             currentEventList->events[currentEventList->count].params[2] = 0;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_TOUCH_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_TOUCH_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4493,7 +4493,7 @@ static void RecordAutomationEvent(void)
             currentEventList->events[currentEventList->count].params[1] = (int)CORE.Input.Touch.position[id].x;
             currentEventList->events[currentEventList->count].params[2] = (int)CORE.Input.Touch.position[id].y;
 
-            TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_TOUCH_POSITION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+            TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_TOUCH_POSITION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
             currentEventList->count++;
         }
 
@@ -4535,7 +4535,7 @@ static void RecordAutomationEvent(void)
                 currentEventList->events[currentEventList->count].params[1] = button;
                 currentEventList->events[currentEventList->count].params[2] = 0;
 
-                TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GAMEPAD_BUTTON_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+                TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GAMEPAD_BUTTON_UP | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
                 currentEventList->count++;
             }
 
@@ -4550,7 +4550,7 @@ static void RecordAutomationEvent(void)
                 currentEventList->events[currentEventList->count].params[1] = button;
                 currentEventList->events[currentEventList->count].params[2] = 0;
 
-                TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GAMEPAD_BUTTON_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+                TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GAMEPAD_BUTTON_DOWN | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
                 currentEventList->count++;
             }
 
@@ -4569,7 +4569,7 @@ static void RecordAutomationEvent(void)
                 currentEventList->events[currentEventList->count].params[1] = axis;
                 currentEventList->events[currentEventList->count].params[2] = (int)(CORE.Input.Gamepad.axisState[gamepad][axis]*32768.0f);
 
-                TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GAMEPAD_AXIS_MOTION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+                TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GAMEPAD_AXIS_MOTION | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
                 currentEventList->count++;
             }
 
@@ -4590,7 +4590,7 @@ static void RecordAutomationEvent(void)
         currentEventList->events[currentEventList->count].params[1] = 0;
         currentEventList->events[currentEventList->count].params[2] = 0;
 
-        TRACELOG(LOG_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GESTURE | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
+        TRACELOG(LOG_LEVEL_INFO, "AUTOMATION: Frame: %i | Event type: INPUT_GESTURE | Event parameters: %i, %i, %i", currentEventList->events[currentEventList->count].frame, currentEventList->events[currentEventList->count].params[0], currentEventList->events[currentEventList->count].params[1], currentEventList->events[currentEventList->count].params[2]);
         currentEventList->count++;
 
         if (currentEventList->count == currentEventList->capacity) return;    // Security check

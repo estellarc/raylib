@@ -586,14 +586,14 @@ typedef enum {
 // Trace log level
 // NOTE: Organized by priority level
 typedef enum {
-    LOG_ALL = 0,        // Display all logs
-    LOG_TRACE,          // Trace logging, intended for internal use only
-    LOG_DEBUG,          // Debug logging, used for internal debugging, it should be disabled on release builds
-    LOG_INFO,           // Info logging, used for program execution info
-    LOG_WARNING,        // Warning logging, used on recoverable failures
-    LOG_ERROR,          // Error logging, used on unrecoverable failures
-    LOG_FATAL,          // Fatal logging, used to abort program: exit(EXIT_FAILURE)
-    LOG_NONE            // Disable logging
+    LOG_LEVEL_ALL = 0,   // Display all logs
+    LOG_LEVEL_TRACE,     // Trace logging, intended for internal use only
+    LOG_LEVEL_DEBUG,     // Debug logging, used for internal debugging, it should be disabled on release builds
+    LOG_LEVEL_INFO,      // Info logging, used for program execution info
+    LOG_LEVEL_WARNING,   // Warning logging, used on recoverable failures
+    LOG_LEVEL_ERROR,     // Error logging, used on unrecoverable failures
+    LOG_LEVEL_FATAL,     // Fatal logging, used to abort program: exit(EXIT_FAILURE)
+    LOG_LEVEL_NONE       // Disable logging
 } TraceLogLevel;
 
 // Keyboard keys (US keyboard layout)
@@ -1128,7 +1128,7 @@ RLAPI void OpenURL(const char *url);                            // Open URL with
 
 // Logging system
 RLAPI void SetTraceLogLevel(int logLevel);                      // Set the current threshold (minimum) log level
-RLAPI void TraceLog(int logLevel, const char *text, ...);       // Show trace log messages (LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR...)
+RLAPI void TraceLog(int logLevel, const char *text, ...);       // Show trace log messages (LOG_LEVEL_DEBUG, LOG_LEVEL_INFO, LOG_LEVEL_WARNING, LOG_LEVEL_ERROR...)
 RLAPI void SetTraceLogCallback(TraceLogCallback callback);      // Set custom trace log
 
 // Memory management, using internal allocators

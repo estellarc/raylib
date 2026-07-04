@@ -91,7 +91,7 @@ int main(void)
     // Initialize the G-buffer
     GBuffer gBuffer = { 0 };
     gBuffer.framebufferId = rlLoadFramebuffer();
-    if (gBuffer.framebufferId == 0) TraceLog(LOG_WARNING, "Failed to create framebufferId");
+    if (gBuffer.framebufferId == 0) TraceLog(LOG_LEVEL_WARNING, "Failed to create framebufferId");
 
     rlEnableFramebuffer(gBuffer.framebufferId);
 
@@ -126,7 +126,7 @@ int main(void)
 
     // Make sure our framebufferId is complete
     // NOTE: rlFramebufferComplete() automatically unbinds the framebufferId, so we don't have to rlDisableFramebuffer() here
-    if (!rlFramebufferComplete(gBuffer.framebufferId)) TraceLog(LOG_WARNING, "Framebuffer is not complete");
+    if (!rlFramebufferComplete(gBuffer.framebufferId)) TraceLog(LOG_LEVEL_WARNING, "Framebuffer is not complete");
 
     // Now we initialize the sampler2D uniform's in the deferred shader
     // We do this by setting the uniform's values to the texture units that

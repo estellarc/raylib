@@ -13614,7 +13614,7 @@ void ma_log_callback_debug(void* pUserData, ma_uint32 level, const char* pMessag
     #if defined(MA_ANDROID)
     {
         /* Android. */
-        __android_log_print(ANDROID_LOG_DEBUG, MA_ANDROID_LOG_TAG, "%s: %s", ma_log_level_to_string(level), pMessage);
+        __android_log_print(ANDROID_LOG_LEVEL_DEBUG, MA_ANDROID_LOG_TAG, "%s: %s", ma_log_level_to_string(level), pMessage);
     }
     #else
     {

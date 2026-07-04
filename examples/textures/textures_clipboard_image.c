@@ -67,7 +67,7 @@ int main(void)
                 currentCollectionIndex++;
                 UnloadImage(image);
             }
-            else TraceLog(LOG_INFO, "IMAGE: Could not retrieve image from clipboard");
+            else TraceLog(LOG_LEVEL_INFO, "IMAGE: Could not retrieve image from clipboard");
         }
         //----------------------------------------------------------------------------------
 

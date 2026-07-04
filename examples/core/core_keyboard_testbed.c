@@ -115,10 +115,10 @@ int main(void)
         // Update
         //----------------------------------------------------------------------------------
         int key = GetKeyPressed(); // Get pressed keycode
-        if (key > 0) TraceLog(LOG_INFO, "KEYBOARD TESTBED: KEY PRESSED:    %d", key);
+        if (key > 0) TraceLog(LOG_LEVEL_INFO, "KEYBOARD TESTBED: KEY PRESSED:    %d", key);
 
         int ch = GetCharPressed(); // Get pressed char for text input, using OS mapping
-        if (ch > 0) TraceLog(LOG_INFO,  "KEYBOARD TESTBED: CHAR PRESSED:   %c (%d)", ch, ch);
+        if (ch > 0) TraceLog(LOG_LEVEL_INFO,  "KEYBOARD TESTBED: CHAR PRESSED:   %c (%d)", ch, ch);
         //----------------------------------------------------------------------------------
 
         // Draw
