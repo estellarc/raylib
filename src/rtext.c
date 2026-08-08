@@ -57,7 +57,7 @@
 
 #include "rlgl.h"           // OpenGL abstraction layer to OpenGL 1.1, 2.1, 3.3+ or ES2 -> Only DrawTextPro()
 
-#include <stdlib.h>         // Required for: malloc(), free()
+#include <stdlib.h>         // Required for: malloc(), free(), qsort(), bsearch()
 #include <stdio.h>          // Required for: vsprintf(), snprintf()
 #include <string.h>         // Required for: strcmp(), strstr(), strncpy(), sscanf() [Used in LoadBMFont()]
 #include <stdarg.h>         // Required for: va_list, va_start(), vsprintf(), va_end() [Used in TextFormat()]
@@ -147,6 +147,10 @@ static GlyphInfo *LoadFontDataBDF(const unsigned char *fileData, int dataSize, c
 
 extern void LoadFontDefault(void);
 extern void UnloadFontDefault(void);
+
+static int CompareGlyphs(const void *a, const void *b);
+static GlyphInfo *SearchGlyph(int codepoint, GlyphInfo *glyphs, int glyphCount);
+static void SortGlyphs(GlyphInfo *glyphs, int glyphCount);
 
 //----------------------------------------------------------------------------------
 // Module Functions Definition
@@ -523,6 +527,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
         font.glyphs[i].image = ImageFromImage(fontClear, tempCharRecs[i]);
     }
 
+    SortGlyphs(font.glyphs, font.glyphCount);
     UnloadImage(fontClear);     // Unload processed image once converted to texture
 
     font.baseSize = (int)font.recs[0].height;
@@ -576,6 +581,7 @@ Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int
             font.glyphs[i].image = ImageFromImage(atlas, font.recs[i]);
         }
 
+        SortGlyphs(font.glyphs, font.glyphCount);
         UnloadImage(atlas);
 
         TRACELOG(LOG_INFO, "FONT: Data loaded successfully (%i pixel size | %i glyphs)", font.baseSize, font.glyphCount);
@@ -1461,21 +1467,21 @@ int GetGlyphIndex(Font font, int codepoint)
 
 #define SUPPORT_UNORDERED_CHARSET
 #if defined(SUPPORT_UNORDERED_CHARSET)
-    int fallbackIndex = 0;      // Get index of fallback glyph '?'
 
-    // Look for character index in the unordered charset
-    for (int i = 0; i < font.glyphCount; i++)
+    GlyphInfo *glyphInfo = NULL;
+    glyphInfo = SearchGlyph(codepoint, font.glyphs, font.glyphCount);
+
+    if (glyphInfo == NULL)
     {
-        if (font.glyphs[i].value == 63) fallbackIndex = i;
-
-        if (font.glyphs[i].value == codepoint)
-        {
-            index = i;
-            break;
-        }
+        glyphInfo = SearchGlyph(63, font.glyphs, font.glyphCount);
+        if (glyphInfo != NULL)
+            index = glyphInfo - font.glyphs;
     }
-
-    if ((index == 0) && (font.glyphs[0].value != codepoint)) index = fallbackIndex;
+    else
+    {
+        index = glyphInfo - font.glyphs;
+    }
+    
 #else
     index = codepoint - 32;
 #endif
@@ -1489,9 +1495,40 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
 {
     GlyphInfo info = { 0 };
 
-    info = font.glyphs[GetGlyphIndex(font, codepoint)];
+    info = *SearchGlyph(codepoint, font.glyphs, font.glyphCount);
 
     return info;
+}
+
+// Compares two glyphs codepoints
+static int CompareGlyphs(const void *a, const void *b)
+{
+    const GlyphInfo* glyph1 = (const GlyphInfo*)a;
+    const GlyphInfo* glyph2 = (const GlyphInfo*)b;
+
+    if (glyph1->value < glyph2->value)
+        return -1;
+    if (glyph1->value > glyph2->value)
+        return 1;
+
+    return 0;
+}
+
+// Search in glyph in a array
+// REQUIRES: bsearch()
+static GlyphInfo *SearchGlyph(int codepoint, GlyphInfo *glyphs, int glyphCount)
+{
+    GlyphInfo key = {0};
+    key.value = codepoint;
+
+    return (GlyphInfo *)bsearch(&key, glyphs, glyphCount, sizeof(GlyphInfo), CompareGlyphs);
+}
+
+// Sorts an array of glyphs
+// REQUIRES: qsort()
+static void SortGlyphs(GlyphInfo *glyphs, int glyphCount)
+{
+    qsort(glyphs, glyphCount, sizeof(GlyphInfo), CompareGlyphs);
 }
 
 // Get glyph rectangle in font atlas for a codepoint (unicode character)
