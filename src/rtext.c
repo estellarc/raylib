@@ -57,7 +57,7 @@
 
 #include "rlgl.h"           // OpenGL abstraction layer to OpenGL 1.1, 2.1, 3.3+ or ES2 -> Only DrawTextPro()
 
-#include <stdlib.h>         // Required for: malloc(), free()
+#include <stdlib.h>         // Required for: malloc(), free(), qsort(), bsearch()
 #include <stdio.h>          // Required for: vsprintf(), snprintf()
 #include <string.h>         // Required for: strcmp(), strstr(), strncpy(), sscanf() [Used in LoadBMFont()]
 #include <stdarg.h>         // Required for: va_list, va_start(), vsprintf(), va_end() [Used in TextFormat()]
@@ -147,6 +147,12 @@ static GlyphInfo *LoadFontDataBDF(const unsigned char *fileData, int dataSize, c
 
 extern void LoadFontDefault(void);
 extern void UnloadFontDefault(void);
+
+static int CompareGlyphs(const void *element1, const void *element2);
+static int CompareGlyphRange(const void *key, const void *element);
+static GlyphInfo *SearchGlyph(int codepoint, GlyphRange *glyphRanges, int glyphRangeCount);
+static void SortGlyphs(GlyphInfo *glyphs, int glyphCount);
+static GlyphRange *GenerateGlyphRanges(GlyphInfo *glyphs, int glyphCount, int *count);
 
 //----------------------------------------------------------------------------------
 // Module Functions Definition
@@ -308,9 +314,13 @@ extern void LoadFontDefault(void)
         defaultFont.glyphs[i].image = ImageFromImage(imFont, defaultFont.recs[i]);
     }
 
+    // Default font is already sorted
+    // SortGlyphs(defaultFont.glyphs, defaultFont.glyphCount);
     UnloadImage(imFont);
 
     defaultFont.baseSize = (int)defaultFont.recs[0].height;
+
+    defaultFont.glyphRanges = GenerateGlyphRanges(defaultFont.glyphs, defaultFont.glyphCount, &defaultFont.glyphRangeCount);
 
     TRACELOG(LOG_LEVEL_INFO, "FONT: Default font loaded successfully (%i glyphs)", defaultFont.glyphCount);
 }
@@ -523,9 +533,12 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
         font.glyphs[i].image = ImageFromImage(fontClear, tempCharRecs[i]);
     }
 
+    SortGlyphs(font.glyphs, font.glyphCount);
     UnloadImage(fontClear);     // Unload processed image once converted to texture
 
     font.baseSize = (int)font.recs[0].height;
+
+    font.glyphRanges = GenerateGlyphRanges(font.glyphs, font.glyphCount, &font.glyphRangeCount);
 
     return font;
 }
@@ -576,7 +589,10 @@ Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int
             font.glyphs[i].image = ImageFromImage(atlas, font.recs[i]);
         }
 
+        SortGlyphs(font.glyphs, font.glyphCount);
         UnloadImage(atlas);
+
+        font.glyphRanges = GenerateGlyphRanges(font.glyphs, font.glyphCount, &font.glyphRangeCount);
 
         TRACELOG(LOG_LEVEL_INFO, "FONT: Data loaded successfully (%i pixel size | %i glyphs)", font.baseSize, font.glyphCount);
     }
@@ -597,10 +613,12 @@ Font LoadFontFromMemory(const char *fileType, const unsigned char *fileData, int
 // WARNING: GPU texture not checked
 bool IsFontValid(Font font)
 {
-    return ((font.baseSize > 0) &&      // Validate font size
-            (font.glyphCount > 0) &&    // Validate font contains some glyph
-            (font.recs != NULL) &&      // Validate font recs defining glyphs on texture atlas
-            (font.glyphs != NULL));     // Validate glyph data is loaded
+    return ((font.baseSize > 0) &&         // Validate font size
+            (font.glyphCount > 0) &&       // Validate font contains some glyph
+            (font.glyphRangeCount > 0) &&  // Validate font contains some glyph range
+            (font.recs != NULL) &&         // Validate font recs defining glyphs on texture atlas
+            (font.glyphRanges != NULL) &&  // Validate font glyph ranges is generated
+            (font.glyphs != NULL));        // Validate glyph data is loaded
 
     // NOTE: Further validations could be done to verify if recs and glyphs contain valid data (glyphs values, metrics...)
 }
@@ -1014,6 +1032,7 @@ void UnloadFont(Font font)
         UnloadFontData(font.glyphs, font.glyphCount);
         UnloadTexture(font.texture);
         RL_FREE(font.recs);
+        RL_FREE(font.glyphRanges);
 
         TRACELOG(LOG_LEVEL_DEBUG, "FONT: Unloaded font data from RAM and VRAM");
     }
@@ -1459,26 +1478,17 @@ int GetGlyphIndex(Font font, int codepoint)
     int index = 0;
     if (!IsFontValid(font)) return index;
 
-#define SUPPORT_UNORDERED_CHARSET
-#if defined(SUPPORT_UNORDERED_CHARSET)
-    int fallbackIndex = 0;      // Get index of fallback glyph '?'
-
-    // Look for character index in the unordered charset
-    for (int i = 0; i < font.glyphCount; i++)
+    GlyphInfo *glyphInfo = SearchGlyph(codepoint, font.glyphRanges, font.glyphRangeCount);
+    if (glyphInfo == NULL)
     {
-        if (font.glyphs[i].value == 63) fallbackIndex = i;
-
-        if (font.glyphs[i].value == codepoint)
-        {
-            index = i;
-            break;
-        }
+        glyphInfo = SearchGlyph(63, font.glyphRanges, font.glyphRangeCount);
+        if (glyphInfo != NULL)
+            index = glyphInfo - font.glyphs;
     }
-
-    if ((index == 0) && (font.glyphs[0].value != codepoint)) index = fallbackIndex;
-#else
-    index = codepoint - 32;
-#endif
+    else
+    {
+        index = glyphInfo - font.glyphs;
+    }
 
     return index;
 }
@@ -1489,9 +1499,112 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
 {
     GlyphInfo info = { 0 };
 
-    info = font.glyphs[GetGlyphIndex(font, codepoint)];
+    GlyphInfo *glyphInfo = SearchGlyph(codepoint, font.glyphRanges, font.glyphRangeCount);
+    if (glyphInfo == NULL)
+    {
+        glyphInfo = SearchGlyph(63, font.glyphRanges, font.glyphRangeCount);
+        if (glyphInfo != NULL)
+            info = *glyphInfo;
+    }
+    else
+    {
+        info = *glyphInfo;
+    }
 
     return info;
+}
+
+// Compares two glyphs codepoints
+static int CompareGlyphs(const void *element1, const void *element2)
+{
+    const GlyphInfo* glyph1 = (const GlyphInfo*)element1;
+    const GlyphInfo* glyph2 = (const GlyphInfo*)element2;
+
+    return glyph1->value - glyph2->value;
+}
+
+// Compares if a codepoint is within a range
+static int CompareGlyphRange(const void *key, const void *element)
+{
+    int codepoint = *(const int*)key;
+    const GlyphRange* glyphRange = (const GlyphRange*)element;
+
+    int lo = glyphRange->glyphs[0].value;
+    int hi = glyphRange->glyphs[glyphRange->glyphCount - 1].value;
+
+    if (codepoint < lo)
+        return -1;
+
+    if (codepoint > hi)
+        return 1;
+
+    return 0;
+}
+
+// Search in glyph in a array of glyph ranges
+// REQUIRES: bsearch()
+static GlyphInfo *SearchGlyph(int codepoint, GlyphRange *glyphRanges, int glyphRangeCount)
+{
+    GlyphRange *glyphRange = (GlyphRange *)bsearch(&codepoint, glyphRanges, glyphRangeCount, sizeof(GlyphRange), CompareGlyphRange);
+    if (glyphRange == NULL)
+        return NULL;
+
+    int index = codepoint - glyphRange->glyphs[0].value;
+
+    return &glyphRange->glyphs[index];
+}
+
+// Sorts an array of glyphs
+// REQUIRES: qsort()
+static void SortGlyphs(GlyphInfo *glyphs, int glyphCount)
+{
+    qsort(glyphs, glyphCount, sizeof(GlyphInfo), CompareGlyphs);
+}
+
+// Computes the glyph ranges of a sorted info glyph array
+// NOTE: The generated array is also sorted
+static GlyphRange *GenerateGlyphRanges(GlyphInfo *glyphs, int glyphCount, int *count)
+{
+    if (glyphCount == 0)
+    {
+        if (count != NULL)
+            *count = 0;
+
+        return NULL;
+    }
+
+    // Counts the required ranges for the set of glyphs
+    int requiredRanges = 1;
+    for (int i = 0; i < glyphCount - 1; i++)
+    {
+        if (glyphs[i + 1].value != glyphs[i].value + 1)
+            requiredRanges++;
+    }
+
+    GlyphRange *glyphRanges = (GlyphRange *)RL_MALLOC(sizeof(GlyphRange)*requiredRanges);
+    int rangeCount = 0;
+    int start = 0;
+
+    for (int i = 0; i < glyphCount - 1; i++)
+    {
+        if (glyphs[i + 1].value != glyphs[i].value + 1)
+        {
+            glyphRanges[rangeCount].glyphs = &glyphs[start];
+            glyphRanges[rangeCount].glyphCount = i - start + 1;
+            rangeCount++;
+            start = i + 1;
+        }
+    }
+
+    // Last range
+    glyphRanges[rangeCount].glyphs = &glyphs[start];
+    glyphRanges[rangeCount].glyphCount = glyphCount - start;
+    rangeCount++;
+
+    if (count != NULL)
+        *count = rangeCount;
+
+    return glyphRanges;
 }
 
 // Get glyph rectangle in font atlas for a codepoint (unicode character)

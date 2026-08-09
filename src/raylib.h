@@ -325,14 +325,21 @@ typedef struct GlyphInfo {
     Image image;            // Character image data
 } GlyphInfo;
 
+typedef struct GlyphRange {
+    int glyphCount;         // Number of glyph characters
+    GlyphInfo* glyphs;      // Glyphs info data
+} GlyphRange;
+
 // Font, font texture and GlyphInfo array data
 typedef struct Font {
     int baseSize;           // Base size (default chars height)
+    int glyphRangeCount;    // Number of glyph ranges 
     int glyphCount;         // Number of glyph characters
     int glyphPadding;       // Padding around the glyph characters
     Texture2D texture;      // Texture atlas containing the glyphs
     Rectangle *recs;        // Rectangles in texture for the glyphs
-    GlyphInfo *glyphs;      // Glyphs info data
+    GlyphRange* glyphRanges;// Ranges of glyph info data
+    GlyphInfo *glyphs;      // Glyphs info data (sorted array)
 } Font;
 
 // Camera, defines position/orientation in 3d space
