@@ -58,7 +58,7 @@
         <Define name="SHADER_LOC_MAP_DIFFUSE" type="UNKNOWN" value="SHADER_LOC_MAP_ALBEDO" desc="" />
         <Define name="SHADER_LOC_MAP_SPECULAR" type="UNKNOWN" value="SHADER_LOC_MAP_METALNESS" desc="" />
     </Defines>
-    <Structs count="35">
+    <Structs count="36">
         <Struct name="Vector2" fieldCount="2" desc="Vector2, 2 components">
             <Field type="float" name="x" desc="Vector x component" />
             <Field type="float" name="y" desc="Vector y component" />
@@ -138,13 +138,19 @@
             <Field type="int" name="advanceX" desc="Character advance position X" />
             <Field type="Image" name="image" desc="Character image data" />
         </Struct>
-        <Struct name="Font" fieldCount="6" desc="Font, font texture and GlyphInfo array data">
+        <Struct name="GlyphRange" fieldCount="2" desc="">
+            <Field type="int" name="glyphCount" desc="Number of glyph characters" />
+            <Field type="GlyphInfo*" name="glyphs" desc="Glyphs info data" />
+        </Struct>
+        <Struct name="Font" fieldCount="8" desc="Font, font texture and GlyphInfo array data">
             <Field type="int" name="baseSize" desc="Base size (default chars height)" />
+            <Field type="int" name="glyphRangeCount" desc="Number of glyph ranges " />
             <Field type="int" name="glyphCount" desc="Number of glyph characters" />
             <Field type="int" name="glyphPadding" desc="Padding around the glyph characters" />
             <Field type="Texture2D" name="texture" desc="Texture atlas containing the glyphs" />
             <Field type="Rectangle *" name="recs" desc="Rectangles in texture for the glyphs" />
-            <Field type="GlyphInfo *" name="glyphs" desc="Glyphs info data" />
+            <Field type="GlyphRange*" name="glyphRanges" desc="Ranges of glyph info data" />
+            <Field type="GlyphInfo *" name="glyphs" desc="Glyphs info data (sorted array)" />
         </Struct>
         <Struct name="Camera3D" fieldCount="5" desc="Camera, defines position/orientation in 3d space">
             <Field type="Vector3" name="position" desc="Camera position" />

@@ -690,6 +690,22 @@ return {
       }
     },
     {
+      name = "GlyphRange",
+      description = "",
+      fields = {
+        {
+          type = "int",
+          name = "glyphCount",
+          description = "Number of glyph characters"
+        },
+        {
+          type = "GlyphInfo*",
+          name = "glyphs",
+          description = "Glyphs info data"
+        }
+      }
+    },
+    {
       name = "Font",
       description = "Font, font texture and GlyphInfo array data",
       fields = {
@@ -697,6 +713,11 @@ return {
           type = "int",
           name = "baseSize",
           description = "Base size (default chars height)"
+        },
+        {
+          type = "int",
+          name = "glyphRangeCount",
+          description = "Number of glyph ranges "
         },
         {
           type = "int",
@@ -719,9 +740,14 @@ return {
           description = "Rectangles in texture for the glyphs"
         },
         {
+          type = "GlyphRange*",
+          name = "glyphRanges",
+          description = "Ranges of glyph info data"
+        },
+        {
           type = "GlyphInfo *",
           name = "glyphs",
-          description = "Glyphs info data"
+          description = "Glyphs info data (sorted array)"
         }
       }
     },
