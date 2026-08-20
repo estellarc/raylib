@@ -1230,18 +1230,16 @@ void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, f
 {
     if (font.texture.id == 0) font = GetFontDefault();  // Security check in case of not valid font
 
-    int size = TextLength(text);    // Total size in bytes of the text, scanned by codepoints in loop
-
     float textOffsetY = 0;          // Offset between lines (on linebreak '\n')
     float textOffsetX = 0.0f;       // Offset X to next character to draw
 
     float scaleFactor = fontSize/font.baseSize;         // Character quad scaling factor
+    int codepointByteCount = 0;
 
-    for (int i = 0; i < size;)
+    while (*text != '\0')
     {
         // Get next codepoint from byte string and glyph index in font
-        int codepointByteCount = 0;
-        int codepoint = GetCodepointNext(&text[i], &codepointByteCount);
+        int codepoint = GetCodepointNext(text, &codepointByteCount);
         int index = GetGlyphIndex(font, codepoint);
 
         if (codepoint == '\n')
@@ -1261,7 +1259,7 @@ void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, f
             else textOffsetX += ((float)font.glyphs[index].advanceX*scaleFactor + spacing);
         }
 
-        i += codepointByteCount;   // Move text bytes counter to next codepoint
+        text += codepointByteCount;   // Move text bytes counter to next codepoint
     }
 }
 
@@ -1363,9 +1361,10 @@ Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing
 {
     Vector2 textSize = { 0 };
 
-    if ((font.texture.id == 0) || (text == NULL) || (text[0] == '\0')) return textSize; // Security check
+    // Security check
+    if ((font.texture.id == 0) || (text == NULL) || (text[0] == '\0'))
+        return textSize;
 
-    int size = TextLength(text);    // Get size in bytes of text
     int tempByteCounter = 0;        // Used to count longer text line num chars
     int byteCounter = 0;
 
@@ -1375,18 +1374,16 @@ Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing
     float textHeight = fontSize;
     float scaleFactor = fontSize/(float)font.baseSize;
 
+    int codepointByteCount = 0;
     int letter = 0;                 // Current character
     int index = 0;                  // Index position in sprite font
 
-    for (int i = 0; i < size;)
+    while (*text != '\0')
     {
         byteCounter++;
 
-        int codepointByteCount = 0;
-        letter = GetCodepointNext(&text[i], &codepointByteCount);
+        letter = GetCodepointNext(text, &codepointByteCount);
         index = GetGlyphIndex(font, letter);
-
-        i += codepointByteCount;
 
         if (letter != '\n')
         {
@@ -1403,10 +1400,14 @@ Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing
             textHeight += (fontSize + textLineSpacing);
         }
 
-        if (tempByteCounter < byteCounter) tempByteCounter = byteCounter;
+        if (tempByteCounter < byteCounter)
+            tempByteCounter = byteCounter;
+
+        text += codepointByteCount;
     }
 
-    if (tempTextWidth < textWidth) tempTextWidth = textWidth;
+    if (tempTextWidth < textWidth)
+        tempTextWidth = textWidth;
 
     textSize.x = tempTextWidth*scaleFactor + (float)((tempByteCounter - 1)*spacing);
     textSize.y = textHeight;
