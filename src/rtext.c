@@ -2870,6 +2870,9 @@ static Font LoadBMFont(const char *fileName)
         }
     }
 
+    SortGlyphs(font.glyphs, font.glyphCount);
+    font.glyphRanges = GenerateGlyphRanges(font.glyphs, font.glyphCount, &font.glyphRangeCount);
+
     UnloadImage(fullFont);
     UnloadFileText(fileText);
 
