@@ -57,7 +57,7 @@
 
 #include "rlgl.h"           // OpenGL abstraction layer to OpenGL 1.1, 2.1, 3.3+ or ES2 -> Only DrawTextPro()
 
-#include <stdlib.h>         // Required for: malloc(), free(), qsort(), bsearch()
+#include <stdlib.h>         // Required for: malloc(), free(), qsort()
 #include <stdio.h>          // Required for: vsprintf(), snprintf()
 #include <string.h>         // Required for: strcmp(), strstr(), strncpy(), sscanf() [Used in LoadBMFont()]
 #include <stdarg.h>         // Required for: va_list, va_start(), vsprintf(), va_end() [Used in TextFormat()]
@@ -149,8 +149,8 @@ extern void LoadFontDefault(void);
 extern void UnloadFontDefault(void);
 
 static int CompareGlyphs(const void *element1, const void *element2);
-static int CompareGlyphRange(const void *key, const void *element);
-static GlyphInfo *SearchGlyph(int codepoint, GlyphRange *glyphRanges, int glyphRangeCount);
+static int CompareGlyphRange(int codepoint, GlyphRange *glyphRange, const GlyphInfo *glyphs);
+static const GlyphInfo *SearchGlyph(const GlyphInfo* glyphs, int codepoint, GlyphRange *glyphRanges, int glyphRangeCount);
 static void SortGlyphs(GlyphInfo *glyphs, int glyphCount);
 static GlyphRange *GenerateGlyphRanges(GlyphInfo *glyphs, int glyphCount, int *count);
 
@@ -1479,10 +1479,10 @@ int GetGlyphIndex(Font font, int codepoint)
     int index = 0;
     if (!IsFontValid(font)) return index;
 
-    GlyphInfo *glyphInfo = SearchGlyph(codepoint, font.glyphRanges, font.glyphRangeCount);
+    const GlyphInfo *glyphInfo = SearchGlyph(font.glyphs, codepoint, font.glyphRanges, font.glyphRangeCount);
     if (glyphInfo == NULL)
     {
-        glyphInfo = SearchGlyph(63, font.glyphRanges, font.glyphRangeCount);
+        glyphInfo = SearchGlyph(font.glyphs, 63, font.glyphRanges, font.glyphRangeCount);
         if (glyphInfo != NULL)
             index = glyphInfo - font.glyphs;
     }
@@ -1500,10 +1500,10 @@ GlyphInfo GetGlyphInfo(Font font, int codepoint)
 {
     GlyphInfo info = { 0 };
 
-    GlyphInfo *glyphInfo = SearchGlyph(codepoint, font.glyphRanges, font.glyphRangeCount);
+    const GlyphInfo *glyphInfo = SearchGlyph(font.glyphs, codepoint, font.glyphRanges, font.glyphRangeCount);
     if (glyphInfo == NULL)
     {
-        glyphInfo = SearchGlyph(63, font.glyphRanges, font.glyphRangeCount);
+        glyphInfo = SearchGlyph(font.glyphs, 63, font.glyphRanges, font.glyphRangeCount);
         if (glyphInfo != NULL)
             info = *glyphInfo;
     }
@@ -1525,34 +1525,44 @@ static int CompareGlyphs(const void *element1, const void *element2)
 }
 
 // Compares if a codepoint is within a range
-static int CompareGlyphRange(const void *key, const void *element)
+static int CompareGlyphRange(int codepoint, GlyphRange *glyphRange, const GlyphInfo *glyphs)
 {
-    int codepoint = *(const int*)key;
-    const GlyphRange* glyphRange = (const GlyphRange*)element;
-
-    int lo = glyphRange->glyphs[0].value;
-    int hi = glyphRange->glyphs[glyphRange->glyphCount - 1].value;
+    int lo = glyphs[glyphRange->start].value;
+    int hi = glyphs[glyphRange->end].value;
 
     if (codepoint < lo)
         return -1;
 
     if (codepoint > hi)
         return 1;
-
+    
     return 0;
 }
 
-// Search in glyph in a array of glyph ranges
-// REQUIRES: bsearch()
-static GlyphInfo *SearchGlyph(int codepoint, GlyphRange *glyphRanges, int glyphRangeCount)
+// Search for a glyph in an array of glyph ranges, using binary search
+static const GlyphInfo *SearchGlyph(const GlyphInfo *glyphs, int codepoint, GlyphRange *glyphRanges, int glyphRangeCount)
 {
-    GlyphRange *glyphRange = (GlyphRange *)bsearch(&codepoint, glyphRanges, glyphRangeCount, sizeof(GlyphRange), CompareGlyphRange);
-    if (glyphRange == NULL)
+    if (glyphRangeCount <= 0)
         return NULL;
 
-    int index = codepoint - glyphRange->glyphs[0].value;
+    unsigned int base = 0;
+    unsigned int remaining = glyphRangeCount;
 
-    return &glyphRange->glyphs[index];
+    while (remaining > 1)
+    {
+        unsigned int half = remaining / 2;
+        base += (CompareGlyphRange(codepoint, &glyphRanges[base + half - 1], glyphs) > 0) * half;
+        remaining -= half;
+    }
+
+    if (CompareGlyphRange(codepoint, &glyphRanges[base], glyphs) != 0)
+        return NULL;
+
+    // Get the glyph index from the found range
+    unsigned int startGlyph = glyphRanges[base].start;
+    unsigned int glyphIndex = startGlyph + (codepoint - glyphs[startGlyph].value);
+
+    return &glyphs[glyphIndex];
 }
 
 // Sorts an array of glyphs
@@ -1562,19 +1572,17 @@ static void SortGlyphs(GlyphInfo *glyphs, int glyphCount)
     qsort(glyphs, glyphCount, sizeof(GlyphInfo), CompareGlyphs);
 }
 
-// Computes the glyph ranges of a sorted info glyph array
-// NOTE: The generated array is also sorted
+// Computes the glyph ranges of a sorted glyph info array
+// NOTE: glyphs must be sorted by ascending value; the resulting ranges are also sorted
 static GlyphRange *GenerateGlyphRanges(GlyphInfo *glyphs, int glyphCount, int *count)
 {
     if (glyphCount == 0)
     {
-        if (count != NULL)
-            *count = 0;
-
+        if (count != NULL) *count = 0;
         return NULL;
     }
 
-    // Counts the required ranges for the set of glyphs
+    // Count the required ranges for the set of glyphs
     int requiredRanges = 1;
     for (int i = 0; i < glyphCount - 1; i++)
     {
@@ -1590,16 +1598,16 @@ static GlyphRange *GenerateGlyphRanges(GlyphInfo *glyphs, int glyphCount, int *c
     {
         if (glyphs[i + 1].value != glyphs[i].value + 1)
         {
-            glyphRanges[rangeCount].glyphs = &glyphs[start];
-            glyphRanges[rangeCount].glyphCount = i - start + 1;
+            glyphRanges[rangeCount].start = start;
+            glyphRanges[rangeCount].end = i;
             rangeCount++;
             start = i + 1;
         }
     }
 
     // Last range
-    glyphRanges[rangeCount].glyphs = &glyphs[start];
-    glyphRanges[rangeCount].glyphCount = glyphCount - start;
+    glyphRanges[rangeCount].start = start;
+    glyphRanges[rangeCount].end = glyphCount - 1;
     rangeCount++;
 
     if (count != NULL)

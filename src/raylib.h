@@ -326,8 +326,8 @@ typedef struct GlyphInfo {
 } GlyphInfo;
 
 typedef struct GlyphRange {
-    int glyphCount;         // Number of glyph characters
-    GlyphInfo* glyphs;      // Glyphs info data
+    unsigned int start;     // Index of the glyph at the start
+    unsigned int end;       // Index of the glyph at the end
 } GlyphRange;
 
 // Font, font texture and GlyphInfo array data
@@ -338,7 +338,7 @@ typedef struct Font {
     int glyphPadding;       // Padding around the glyph characters
     Texture2D texture;      // Texture atlas containing the glyphs
     Rectangle *recs;        // Rectangles in texture for the glyphs
-    GlyphRange* glyphRanges;// Ranges of glyph info data
+    GlyphRange *glyphRanges;// Ranges of glyph info data
     GlyphInfo *glyphs;      // Glyphs info data (sorted array)
 } Font;
 
