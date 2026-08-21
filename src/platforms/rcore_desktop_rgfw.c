@@ -613,7 +613,7 @@ static void RGFW_cb_windowmovefunc(const RGFW_event *e)
     if (e->common.win != platform.window) return;
 
     CORE.Window.position.x = platform.window->x;
-    CORE.Window.position.y = platform.window->x;
+    CORE.Window.position.y = platform.window->y;
 }
 static void RGFW_cb_keycharfunc(const RGFW_event *e)
 {
@@ -1613,11 +1613,11 @@ void PollInputEvents(void)
     }
 
     //-----------------------------------------------------------------------------
-    // using RGFW callbacks instead of polling
+    // Using RGFW callbacks instead of polling
     RGFW_pollEvents();
     //-----------------------------------------------------------------------------
 
-    mg_event gamepad_event;
+    mg_event gamepad_event = { 0 };
     while (mg_gamepads_check_event(&platform.minigamepad, &gamepad_event))
     {
         int gamepadIndex = gamepad_event.gamepad->index;
