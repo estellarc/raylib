@@ -1639,13 +1639,15 @@ char **LoadTextLines(const char *text, int *count)
 
     if (text != NULL)
     {
-        int textLength = TextLength(text);
+        unsigned int textLength = 0;
         lineCount = 1;
 
         // First text scan pass to get required line count
-        for (int i = 0; i < textLength; i++)
+        while (text[textLength] != '\0')
         {
-            if (text[i] == '\n') lineCount++;
+            if (text[textLength] == '\n')
+                lineCount++;
+            textLength++;   
         }
 
         lines = (char **)RL_CALLOC(lineCount, sizeof(char *));
