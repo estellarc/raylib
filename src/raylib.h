@@ -163,8 +163,6 @@
 // this defines are useful for internal check and avoid type (re)definitions
 #define RL_COLOR_TYPE
 #define RL_RECTANGLE_TYPE
-#define RL_QUATERNION_TYPE
-#define RL_MATRIX_TYPE
 
 // Some Basic Colors
 // NOTE: Custom raylib color palette for amazing visuals on WHITE background
@@ -245,8 +243,18 @@ typedef struct Vector4 {
 
 #endif // RL_VECTOR4_TYPE
 
+typedef Vector4 Quaternion;
+
+#ifndef RL_QUATERNION_TYPE
+#define RL_QUATERNION_TYPE
+
 // Quaternion, 4 components (Vector4 alias)
 typedef Vector4 Quaternion;
+
+#endif // RL_QUATERNION_TYPE
+
+#ifndef RL_MATRIX_TYPE
+#define RL_MATRIX_TYPE
 
 // Matrix, 4x4 components, column major, OpenGL style, right-handed
 typedef struct Matrix {
@@ -255,6 +263,8 @@ typedef struct Matrix {
     float m2, m6, m10, m14; // Matrix third row (4 components)
     float m3, m7, m11, m15; // Matrix fourth row (4 components)
 } Matrix;
+
+#endif // RL_MATRIX_TYPE
 
 // Color, 4 components, R8G8B8A8 (32bit)
 typedef struct Color {
