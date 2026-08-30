@@ -103,18 +103,6 @@ return {
       description = ""
     },
     {
-      name = "RL_QUATERNION_TYPE",
-      type = "GUARD",
-      value = "",
-      description = ""
-    },
-    {
-      name = "RL_MATRIX_TYPE",
-      type = "GUARD",
-      value = "",
-      description = ""
-    },
-    {
       name = "LIGHTGRAY",
       type = "COLOR",
       value = "CLITERAL(Color){ 200, 200, 200, 255 }",
@@ -290,6 +278,18 @@ return {
     },
     {
       name = "RL_VECTOR4_TYPE",
+      type = "GUARD",
+      value = "",
+      description = ""
+    },
+    {
+      name = "RL_QUATERNION_TYPE",
+      type = "GUARD",
+      value = "",
+      description = ""
+    },
+    {
+      name = "RL_MATRIX_TYPE",
       type = "GUARD",
       value = "",
       description = ""
@@ -694,14 +694,14 @@ return {
       description = "",
       fields = {
         {
-          type = "int",
-          name = "glyphCount",
-          description = "Number of glyph characters"
+          type = "unsigned int",
+          name = "start",
+          description = "Index of the glyph at the start"
         },
         {
-          type = "GlyphInfo*",
-          name = "glyphs",
-          description = "Glyphs info data"
+          type = "unsigned int",
+          name = "end",
+          description = "Index of the glyph at the end"
         }
       }
     },
@@ -740,7 +740,7 @@ return {
           description = "Rectangles in texture for the glyphs"
         },
         {
-          type = "GlyphRange*",
+          type = "GlyphRange *",
           name = "glyphRanges",
           description = "Ranges of glyph info data"
         },
@@ -1411,6 +1411,11 @@ return {
     }
   },
   aliases = {
+    {
+      type = "Vector4",
+      name = "Quaternion",
+      description = ""
+    },
     {
       type = "Vector4",
       name = "Quaternion",
