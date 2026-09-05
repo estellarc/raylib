@@ -590,7 +590,7 @@ Alias 006: Camera
   Type: Camera3D
   Name: Camera
   Description: Camera type fallback, defaults to Camera3D
-Alias 006: ModelAnimPose
+Alias 007: ModelAnimPose
   Type: Transform *
   Name: ModelAnimPose
   Description: Anim pose, an array of Transform[]
