@@ -427,9 +427,6 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
     int charSpacing = 0;
     int lineSpacing = 0;
 
-    int x = 0;
-    int y = 0;
-
     // Allocate a temporal arrays for glyphs data measures,
     // once the actual number of glyphs is obtained, copy data to a sized array
     int tempCharValues[MAX_GLYPHS_FROM_IMAGE] = { 0 };
@@ -438,6 +435,8 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
     Color *pixels = LoadImageColors(image);
 
     // Parse image data to get charSpacing and lineSpacing
+    int x = 0;
+    int y = 0;
     for (y = 0; y < image.height; y++)
     {
         for (x = 0; x < image.width; x++)
@@ -448,7 +447,12 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
         if (!COLOR_EQUAL(pixels[y*image.width + x], key)) break;
     }
 
-    if ((x == 0) || (y == 0)) return font; // Security check
+    // Security check
+    if ((x == 0) || (y == 0))
+    {
+        UnloadImageColors(pixels);
+        return font;
+    }
 
     charSpacing = x;
     lineSpacing = y;

@@ -56,7 +56,14 @@ features
 
 limitations
 -----------
-  - No support for rendering during resizing or window movement on windows platforms
+
+raylib presents some limitation by design for code simplicity, some forks, alternatives and samples are available to overcome most of them but it's up to the users to modify the library for their specific needs.
+
+  - Single window with single OpenGL context by default, no multi-window support
+  - Window resize and move stops the rendering loop on platforms supporting a window
+  - `RenderTextures` are flipped vertically, as provided by OpenGL, it's up to user to draw then flipped to screen
+  - Font rasterization has lower quality than alternatives using `Freetype2`, `HarfBuzz` or `Slug`
+  - Text drawing does not support RTL, ligatures or emojis
 
 basic example
 --------------

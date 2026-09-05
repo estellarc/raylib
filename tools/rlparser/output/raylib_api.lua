@@ -1442,8 +1442,8 @@ return {
       description = "Camera type fallback, defaults to Camera3D"
     },
     {
-      type = "Transform",
-      name = "*ModelAnimPose",
+      type = "Transform *",
+      name = "ModelAnimPose",
       description = "Anim pose, an array of Transform[]"
     }
   },
@@ -4125,6 +4125,14 @@ return {
       }
     },
     {
+      name = "IsFileHidden",
+      description = "Check if file path (file or directory) is hidden by OS",
+      returnType = "bool",
+      params = {
+        {type = "const char *", name = "filePath"}
+      }
+    },
+    {
       name = "GetFileLength",
       description = "Get file length in bytes (NOTE: GetFileSize() conflicts with windows.h)",
       returnType = "int",
@@ -4927,6 +4935,18 @@ return {
       }
     },
     {
+      name = "DrawTriangleLinesEx",
+      description = "Draw triangle outline with line thickness, counter-clockwise vertex order",
+      returnType = "void",
+      params = {
+        {type = "Vector2", name = "v1"},
+        {type = "Vector2", name = "v2"},
+        {type = "Vector2", name = "v3"},
+        {type = "float", name = "thick"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
       name = "DrawTriangleFan",
       description = "Draw a triangle fan defined by points (first vertex is the center)",
       returnType = "void",
@@ -5178,6 +5198,20 @@ return {
       }
     },
     {
+      name = "DrawCircleSectorLinesEx",
+      description = "Draw circle sector outline with thickness",
+      returnType = "void",
+      params = {
+        {type = "Vector2", name = "center"},
+        {type = "float", name = "radius"},
+        {type = "float", name = "startAngle"},
+        {type = "float", name = "endAngle"},
+        {type = "int", name = "segments"},
+        {type = "float", name = "thick"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
       name = "DrawCircleLines",
       description = "Draw circle outline",
       returnType = "void",
@@ -5256,6 +5290,18 @@ return {
       }
     },
     {
+      name = "DrawEllipseLinesEx",
+      description = "Draw ellipse outline with line thickness",
+      returnType = "void",
+      params = {
+        {type = "Vector2", name = "center"},
+        {type = "float", name = "radiusH"},
+        {type = "float", name = "radiusV"},
+        {type = "float", name = "thick"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
       name = "DrawRing",
       description = "Draw ring",
       returnType = "void",
@@ -5280,6 +5326,21 @@ return {
         {type = "float", name = "startAngle"},
         {type = "float", name = "endAngle"},
         {type = "int", name = "segments"},
+        {type = "Color", name = "color"}
+      }
+    },
+    {
+      name = "DrawRingLinesEx",
+      description = "Draw ring outline with line thickness",
+      returnType = "void",
+      params = {
+        {type = "Vector2", name = "center"},
+        {type = "float", name = "innerRadius"},
+        {type = "float", name = "outerRadius"},
+        {type = "float", name = "startAngle"},
+        {type = "float", name = "endAngle"},
+        {type = "int", name = "segments"},
+        {type = "float", name = "thick"},
         {type = "Color", name = "color"}
       }
     },
@@ -6512,6 +6573,16 @@ return {
       params = {
         {type = "int", name = "width"},
         {type = "int", name = "height"}
+      }
+    },
+    {
+      name = "LoadRenderTextureEx",
+      description = "Load texture for rendering (framebuffer), with specific format",
+      returnType = "RenderTexture2D",
+      params = {
+        {type = "int", name = "width"},
+        {type = "int", name = "height"},
+        {type = "int", name = "format"}
       }
     },
     {
